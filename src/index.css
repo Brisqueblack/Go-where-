@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+/* ──────────────────────────────────────────────
+   VibeVoyage AI — Brand Theme (Tailwind v4)
+   See: brand/style_guide.md for full reference
+   ────────────────────────────────────────────── */
+
+@theme {
+  /* Primary Colors */
+  --color-teal: #0A9B8C;
+  --color-coral: #FF6B5B;
+  --color-navy: #1A2B3C;
+
+  /* Accent Colors */
+  --color-violet: #7C5CFC;
+  --color-sand: #F8F6F0;
+  --color-amber: #F4A94D;
+  --color-white: #FFFFFF;
+
+  /* Functional Colors */
+  --color-success: #2ED47A;
+  --color-error: #E74C3C;
+  --color-warning: #F4A94D;
+  --color-info: #7C5CFC;
+
+  /* Text Colors */
+  --color-text-primary: #1A2B3C;
+  --color-text-secondary: #5A6B7C;
+  --color-text-on-dark: #FFFFFF;
+  --color-text-muted: #A0AAB4;
+
+  /* Typography */
+  --font-heading: "Montserrat", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  /* Spacing (brand scale) */
+  --space-4xs: 2px;
+  --space-3xs: 4px;
+  --space-2xs: 8px;
+  --space-xs: 12px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+
+  /* Shadows */
+  --shadow-card: 0 2px 8px rgba(26, 43, 60, 0.08);
+  --shadow-card-hover: 0 8px 24px rgba(26, 43, 60, 0.12);
+}
+
+/* ──────────────────────────────────────────────
+   Base Styles
+   ────────────────────────────────────────────── */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Heading defaults */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Tailwind v4 doesn't use @layer base the same way,
+   but we keep minimal resets here. */
+
+/* ──────────────────────────────────────────────
+   Animations
+   ────────────────────────────────────────────── */
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out;
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
