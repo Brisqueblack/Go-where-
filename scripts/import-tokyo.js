@@ -4,6 +4,14 @@ import { execSync } from 'child_process'
 const data = JSON.parse(readFileSync('/home/team/shared/tokyo-hidden-gems.json', 'utf-8'))
 const venues = data.venues
 
+// First, delete existing Tokyo venues
+try {
+  execSync(`team-db "DELETE FROM venues WHERE city = 'Tokyo'"`, { encoding: 'utf-8', timeout: 10000 })
+  console.log('🗑️  Cleared existing Tokyo venues')
+} catch (e) {
+  console.log('⚠️  No existing Tokyo venues to clear')
+}
+
 let imported = 0
 let errors = 0
 
@@ -12,8 +20,8 @@ for (const v of venues) {
     const name = v.name.replace(/'/g, "''")
     const cat = (v.category || '').replace(/'/g, "''")
     const desc = (v.description || '').replace(/'/g, "''")
-    const city = (v.city || 'Tokyo').replace(/'/g, "''")
-    const borough = (v.borough || '').replace(/'/g, "''")
+    const city = 'Tokyo'
+    const borough = (v.neighborhood || '').replace(/'/g, "''")
     const tags = JSON.stringify(v.tags || []).replace(/'/g, "''")
     const tip = (v.local_tip || '').replace(/'/g, "''")
     const lat = v.latitude ?? 'NULL'
@@ -31,15 +39,16 @@ for (const v of venues) {
   }
 }
 
-console.log('\n📊 Tokyo Import Summary')
-console.log('━━━━━━━━━━━━━━━━━━━')
+console.log('\n📊 Tokyo Import Summary (Designer Curated)')
+console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
 console.log(`Total in file:  ${venues.length}`)
 console.log(`Imported:       ${imported}`)
 console.log(`Errors:         ${errors}`)
 
+// Verify
 const result = JSON.parse(execSync(`team-db "SELECT city, COUNT(*) as cnt FROM venues GROUP BY city ORDER BY city"`, { encoding: 'utf-8' }))
 console.log(`\n📊 Venue Count by City:`)
 for (const row of result) {
   console.log(`  ${row.city}: ${row.cnt}`)
 }
-console.log('━━━━━━━━━━━━━━━━━━━')
+console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')

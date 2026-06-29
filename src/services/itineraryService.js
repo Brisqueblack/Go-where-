@@ -18,6 +18,12 @@ export async function generateItinerary(inputs, opts = {}) {
           'new york': 'New York',
           'nyc': 'New York',
           'tokyo': 'Tokyo',
+          'boston': 'Boston',
+          'philadelphia': 'Philadelphia',
+          'washington': 'Washington D.C.',
+          'dc': 'Washington D.C.',
+          'chicago': 'Chicago',
+          'miami': 'Miami',
         }
         const cityFilter = Object.entries(cityMap).find(([key]) => destLower.includes(key))?.[1]
 
