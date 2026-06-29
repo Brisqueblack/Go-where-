@@ -49,6 +49,33 @@ export async function listItineraries() {
 }
 
 /**
+ * Submit feedback on an itinerary.
+ * @param {object} data - { itinerary_id, rating, comment, source }
+ * @returns {Promise<{ success: boolean, message?: string }>}
+ */
+export async function submitFeedback(data) {
+  try {
+    const res = await fetch(`${API_BASE}/feedback`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    return res.json()
+  } catch (err) {
+    return { success: false, error: `Network error: ${err.message}` }
+  }
+}
+
+/**
+ * Get feedback summary (admin).
+ * @returns {Promise<{ summary: object, recent: Array }>}
+ */
+export async function getFeedbackSummary() {
+  const res = await fetch(`${API_BASE}/feedback`)
+  return res.json()
+}
+
+/**
  * Health check.
  * @returns {Promise<object>}
  */
@@ -57,4 +84,4 @@ export async function healthCheck() {
   return res.json()
 }
 
-export default { generateItinerary, getItinerary, listItineraries, healthCheck }
+export default { generateItinerary, getItinerary, listItineraries, submitFeedback, getFeedbackSummary, healthCheck }

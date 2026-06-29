@@ -44,6 +44,7 @@ export function useItineraryGenerator() {
         budget_level: inputs.budget_level || 'moderate',
         vibes: inputs.vibes || 'balanced',
         preferences: inputs.preferences || '',
+        is_premium: inputs.isPremium === true || inputs.isPremium === 'true',
       })
 
       if (result.success) {

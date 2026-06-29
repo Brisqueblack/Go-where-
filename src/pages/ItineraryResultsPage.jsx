@@ -6,6 +6,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '../components/ui'
+import FeedbackSection from '../components/FeedbackSection'
 import { generateItinerary } from '../services/api.js'
 
 const timeEmoji = { morning: '🌅', afternoon: '☀️', evening: '🌙' }
@@ -157,6 +158,9 @@ export default function ItineraryResultsPage({ preferences, onBack, onNewSearch 
             </div>
           ))}
         </div>
+
+        {/* Feedback section */}
+        {itinerary.id && <FeedbackSection itineraryId={itinerary.id} />}
       </div>
     </div>
   )

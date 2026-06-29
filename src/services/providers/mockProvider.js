@@ -1,135 +1,133 @@
 /**
- * Mock LLM Provider — Returns realistic pre-built NYC itineraries.
- *
- * This provider is the default when no real LLM API key is configured.
- * It generates diverse, location-accurate itineraries across NYC
- * neighbourhoods, demonstrating the full data flow without external calls.
+ * mockProvider.js
+ * A mock LLM provider for development and testing.
+ * Returns realistic-looking NYC itineraries.
  */
 
-// ── NYC venue database ─────────────────────────────────────────────────────
-// Curated with real-ish names, categories, and approximate coordinates.
+const THEMES = [
+  'Classic Highlights',
+  'Hidden Gems & Local Spots',
+  'Food Lover\'s Tour',
+  'Art & Culture Exploration',
+  'Outdoors & Parks',
+]
 
 const NYC_VENUES = {
-  // ── Manhattan ────────────────────────────────────────────────────────
   manhattan: {
     morning: [
-      { name: 'Russ & Daughters Café', category: 'restaurant', lat: 40.7223, lng: -73.9874, cost: 25, desc: 'Iconic Jewish appetizing spot on the Lower East Side. Famous for bagels and lox.' },
-      { name: 'Buvette', category: 'restaurant', lat: 40.7340, lng: -73.9998, cost: 30, desc: 'Cozy French-Italian gastrotheque in the West Village. Perfect for a leisurely brunch.' },
-      { name: 'Jack\'s Wife Freda', category: 'restaurant', lat: 40.7285, lng: -74.0025, cost: 22, desc: 'Beloved Mediterranean-Mediterranean fusion spot with a warm,instagrammable vibe.' },
-      { name: 'The Smile', category: 'restaurant', lat: 40.7256, lng: -73.9935, cost: 28, desc: 'Hidden basement café in NoHo with excellent coffee and healthy bowls.' },
-      { name: 'Dominique Ansel Bakery', category: 'restaurant', lat: 40.7243, lng: -73.9995, cost: 15, desc: 'Home of the cronut! Grab a pastry and coffee to start your day.' },
+      { name: 'The High Line', cat: 'park', cost: 0, lat: 40.7480, lng: -74.0048, desc: 'A stunning elevated park built on a historic freight rail line.' },
+      { name: 'Central Park (Sheep Meadow)', cat: 'park', cost: 0, lat: 40.7713, lng: -73.9741, desc: 'The perfect spot for a morning picnic or people watching.' },
+      { name: 'Russ & Daughters Café', cat: 'restaurant', cost: 25, lat: 40.7204, lng: -73.9897, desc: 'A lower east side institution famous for bagels and lox.' },
     ],
     afternoon: [
-      { name: 'The Metropolitan Museum of Art', category: 'museum', lat: 40.7794, lng: -73.9632, cost: 30, desc: 'World-renowned art museum on Museum Mile. Pay-what-you-wish for NY residents.' },
-      { name: 'The High Line', category: 'park', lat: 40.7480, lng: -74.0048, cost: 0, desc: 'Elevated park built on historic rail tracks. Stroll through Chelsea with skyline views.' },
-      { name: 'MoMA', category: 'museum', lat: 40.7614, lng: -73.9776, cost: 25, desc: 'Museum of Modern Art. Van Gogh, Warhol, and cutting-edge exhibits.' },
-      { name: 'Chelsea Market', category: 'shopping', lat: 40.7425, lng: -74.0058, cost: 20, desc: 'Indoor food hall and market in the meatpacking district. Great for lunch browsing.' },
-      { name: 'Strand Bookstore', category: 'shopping', lat: 40.7340, lng: -73.9930, cost: 15, desc: 'Legendary 18-mile bookstore in the East Village. Perfect for used-book lovers.' },
-      { name: 'The Frick Collection', category: 'museum', lat: 40.7710, lng: -73.9674, cost: 22, desc: 'Intimate art museum in Henry Clay Frick\'s former mansion on the Upper East Side.' },
-      { name: 'Brooklyn Bridge Walk', category: 'outdoor', lat: 40.7061, lng: -73.9969, cost: 0, desc: 'Walk from Manhattan to Brooklyn across the iconic bridge. Stunning skyline views.' },
-      { name: 'Summit One Vanderbilt', category: 'landmark', lat: 40.7527, lng: -73.9772, cost: 45, desc: 'Immersive art experience and observation deck with floor-to-ceiling mirrors.' },
+      { name: 'The Metropolitan Museum of Art', cat: 'museum', cost: 30, lat: 40.7794, lng: -73.9632, desc: 'One of the world\'s largest and finest art museums.' },
+      { name: 'Chelsea Market', cat: 'shopping', cost: 20, lat: 40.7423, lng: -74.0062, desc: 'An iconic indoor food hall with dozens of local vendors.' },
+      { name: 'The Frick Collection', cat: 'museum', cost: 25, lat: 40.7712, lng: -73.9672, desc: 'Masterpiece paintings in a stunning Gilded Age mansion.' },
     ],
     evening: [
-      { name: 'Katz\'s Delicatessen', category: 'restaurant', lat: 40.7222, lng: -73.9872, cost: 25, desc: 'NYC institution since 1888. The pastrami sandwich is legendary.' },
-      { name: 'Los Tacos No. 1', category: 'restaurant', lat: 40.7420, lng: -74.0055, cost: 12, desc: 'Best authentic tacos in NYC. Cash only, no frills, unforgettable.' },
-      { name: 'Carbone', category: 'restaurant', lat: 40.7305, lng: -73.9960, cost: 80, desc: 'Upscale Italian-American with a retro vibe. Reserve weeks ahead.' },
-      { name: 'Ivan Ramen', category: 'restaurant', lat: 40.7510, lng: -73.9920, cost: 20, desc: 'Michelin-starred ramen in Hell\'s Kitchen. Slurp-worthy broth.' },
-      { name: 'Joe\'s Shanghai', category: 'restaurant', lat: 40.7155, lng: -73.9975, cost: 18, desc: 'Famous for soup dumplings in Chinatown. Cash only, worth the wait.' },
-      { name: 'Blue Note Jazz Club', category: 'entertainment', lat: 40.7305, lng: -74.0005, cost: 45, desc: 'World-famous jazz club in Greenwich Village. Intimate sets from legends.' },
-      { name: 'The Comedy Cellar', category: 'entertainment', lat: 40.7300, lng: -74.0000, cost: 30, desc: 'Greenwich Village comedy club. You never know who\'ll drop in.' },
-      { name: 'Sleep No More', category: 'entertainment', lat: 40.7550, lng: -73.9950, cost: 150, desc: 'Immersive Macbeth experience in Chelsea. Wear comfortable shoes.' },
-      { name: 'Top of the Rock', category: 'landmark', lat: 40.7587, lng: -73.9787, cost: 40, desc: 'Rockefeller Center observation deck. Sunset views of the Empire State Building.' },
-      { name: 'Dive Bar at The Sanctuary Hotel', category: 'entertainment', lat: 40.7600, lng: -73.9825, cost: 20, desc: 'Rooftop bar in Times Square with craft cocktails and skyline views.' },
-    ],
+      { name: 'Blue Note Jazz Club', cat: 'entertainment', cost: 35, lat: 40.7309, lng: -74.0007, desc: 'World-famous jazz venue in Greenwich Village.' },
+      { name: 'Carbone', cat: 'restaurant', cost: 100, lat: 40.7280, lng: -73.9997, desc: 'High-end Italian-American food that feels like a 1950s movie.' },
+      { name: 'Buvette', cat: 'restaurant', cost: 40, lat: 40.7328, lng: -74.0051, desc: 'A charming French bistro in the heart of the West Village.' },
+    ]
   },
-
-  // ── Brooklyn ─────────────────────────────────────────────────────────
   brooklyn: {
     morning: [
-      { name: 'Lilia', category: 'restaurant', lat: 40.7190, lng: -73.9595, cost: 35, desc: 'Michelin-starred Italian in Williamsburg. The handmade pasta is worth the hype.' },
-      { name: 'Milk Bar Williamsburg', category: 'restaurant', lat: 40.7127, lng: -73.9602, cost: 10, desc: 'Famous for cereal milk soft serve and compost cookies. Sweet breakfast treat.' },
-      { name: 'Café Colette', category: 'restaurant', lat: 40.6850, lng: -73.9910, cost: 18, desc: 'Sunny Australian-style café in Williamsburg with excellent flat whites.' },
+      { name: 'Lilia', cat: 'restaurant', cost: 45, lat: 40.7176, lng: -73.9527, desc: 'Michelin-starred Italian in Williamsburg. The handmade pasta is worth the hype.' },
+      { name: 'Brooklyn Bridge Walk', cat: 'outdoor', cost: 0, lat: 40.7061, lng: -73.9969, desc: 'Iconic views of the Manhattan skyline.' },
     ],
     afternoon: [
-      { name: 'Brooklyn Museum', category: 'museum', lat: 40.6712, lng: -73.9636, cost: 16, desc: 'One of the oldest and largest art museums in the US. The First Saturday events are iconic.' },
-      { name: 'Prospect Park', category: 'park', lat: 40.6602, lng: -73.9690, cost: 0, desc: 'Brooklyn\'s answer to Central Park. Designed by Olmsted & Vaux. Perfect for a picnic.' },
-      { name: 'Smorgasburg Williamsburg', category: 'restaurant', lat: 40.7140, lng: -73.9620, cost: 25, desc: 'Massive outdoor food market on weekends. 100+ vendors, something for everyone.' },
-      { name: 'DUMBO Arts District', category: 'shopping', lat: 40.7033, lng: -73.9898, cost: 0, desc: 'Galleries, indie shops, and the iconic Washington Street view of the Manhattan Bridge.' },
+      { name: 'DUMBO Arts District', cat: 'shopping', cost: 15, lat: 40.7033, lng: -73.9881, desc: 'Galleries, bookstores, and the most famous photo spot in Brooklyn.' },
+      { name: 'Prospect Park', cat: 'park', cost: 0, lat: 40.6602, lng: -73.9690, desc: 'Brooklyn\'s answer to Central Park, designed by the same architects.' },
+      { name: 'Smorgasburg Williamsburg', cat: 'restaurant', cost: 20, lat: 40.7210, lng: -73.9619, desc: 'The largest weekly open-air food market in America.' },
     ],
     evening: [
-      { name: 'Peter Luger Steak House', category: 'restaurant', lat: 40.7105, lng: -73.9615, cost: 70, desc: 'Brooklyn institution since 1887. Cash-only, porterhouse steak is the move.' },
-      { name: 'Di Fara Pizza', category: 'restaurant', lat: 40.6200, lng: -73.9590, cost: 15, desc: 'Legendary Midwood pizzeria. Dom DeMarco\'s hand-crafted pies are worth the trip.' },
-      { name: 'Roberta\'s Pizza', category: 'restaurant', lat: 40.7030, lng: -73.9325, cost: 22, desc: 'Bushwick pizza pioneer. Hipster vibe, incredible wood-fired pies.' },
-      { name: 'Brooklyn Bowl', category: 'entertainment', lat: 40.7200, lng: -73.9600, cost: 25, desc: 'Bowling, live music, and Blue Ribbon fried chicken under one roof in Williamsburg.' },
-      { name: 'Elsewhere', category: 'entertainment', lat: 40.7050, lng: -73.9445, cost: 30, desc: 'Three-floor music venue and art space in Bushwick. Cutting-edge electronic shows.' },
-    ],
+      { name: 'Di Fara Pizza', cat: 'restaurant', cost: 30, lat: 40.6251, lng: -73.9615, desc: 'Widely considered the best pizza in New York City.' },
+      { name: 'Brooklyn Academy of Music', cat: 'entertainment', cost: 40, lat: 40.6867, lng: -73.9779, desc: 'A multi-venue arts center with world-class performances.' },
+    ]
   },
-
-  // ── Hidden Gems ──────────────────────────────────────────────────────
-  hidden: [
-    { name: 'The Cloisters', category: 'museum', lat: 40.8648, lng: -73.9317, cost: 25, desc: 'Medieval art museum in Fort Tryon Park. Feels like a European monastery overlooking the Hudson.' },
-    { name: 'City Island', category: 'outdoor', lat: 40.8465, lng: -73.7860, cost: 0, desc: 'A fishing village in the Bronx. Fresh seafood and small-town charm 20 min from Manhattan.' },
-    { name: 'Green-Wood Cemetery', category: 'park', lat: 40.6525, lng: -73.9905, cost: 0, desc: 'Historic cemetery and arboretum in Brooklyn. Stunning Gothic architecture and birdwatching.' },
-    { name: 'Socrates Sculpture Park', category: 'park', lat: 40.7685, lng: -73.9470, cost: 0, desc: 'Waterfront sculpture park in Long Island City with incredible Manhattan skyline views.' },
-    { name: 'Jacqueline Kennedy Onassis Reservoir', category: 'outdoor', lat: 40.7800, lng: -73.9580, cost: 0, desc: 'Scenic 1.58-mile running track around Central Park\'s reservoir. Iconic NYC jogging spot.' },
-  ],
 }
 
-// ── Theme templates ────────────────────────────────────────────────────────
-
-const THEMES = [
-  'Classic NYC Highlights',
-  'Food Lover\'s Tour',
-  'Arts & Culture Deep Dive',
-  'Off the Beaten Path',
-  'Shop & Stroll',
-  'Neighbourhood Explorer',
-  'Date Night Special',
-  'Budget-Friendly Adventure',
-]
+const TOKYO_VENUES = {
+  shinjuku: {
+    morning: [
+      { name: 'Meiji Jingu Shrine', cat: 'culture', cost: 0, lat: 35.6764, lng: 139.6993, desc: 'A serene Shinto shrine surrounded by a 175-acre forest — right in the middle of Tokyo.' },
+      { name: 'Tsukiji Outer Market', cat: 'restaurant', cost: 15, lat: 35.6649, lng: 139.7707, desc: 'The bustling outer market of the former Tsukiji fish market. Fresh seafood, street food, and kitchen knives.' },
+    ],
+    afternoon: [
+      { name: 'Shibuya Sky Observation Deck', cat: 'culture', cost: 18, lat: 35.6580, lng: 139.7016, desc: 'A 360-degree open-air observation deck atop Shibuya Scramble — the best skyline view in Tokyo.' },
+      { name: 'Harajuku Takeshita Street', cat: 'shopping', cost: 15, lat: 35.6702, lng: 139.7027, desc: 'The epicenter of Tokyo youth culture. Crazy fashion, crepes, and goth-Lolita boutiques.' },
+      { name: 'Akihabara Electric Town', cat: 'shopping', cost: 20, lat: 35.7022, lng: 139.7734, desc: 'The world-famous electronics and anime district. Multi-story arcades, maid cafes, and retro game shops.' },
+    ],
+    evening: [
+      { name: 'Ramen Street (Tokyo Station)', cat: 'restaurant', cost: 12, lat: 35.6812, lng: 139.7671, desc: 'A collection of 8 of Tokyo\'s best ramen shops under one roof in Tokyo Station.' },
+      { name: 'Robot Restaurant (Shinjuku)', cat: 'entertainment', cost: 40, lat: 35.6945, lng: 139.7032, desc: 'A bizarre, spectacular, over-the-top show with robots, lasers, and dancing — pure Tokyo weirdness.' },
+    ]
+  },
+  shitamachi: {
+    morning: [
+      { name: 'Senso-ji Temple (Asakusa)', cat: 'culture', cost: 0, lat: 35.7148, lng: 139.7967, desc: 'Tokyo\'s oldest temple, with a massive red lantern and a vibrant market street leading to it.' },
+    ],
+    afternoon: [
+      { name: 'teamLab Borderless', cat: 'culture', cost: 30, lat: 35.6264, lng: 139.7841, desc: 'A mind-bending digital art museum where immersive light installations respond to your presence.' },
+      { name: 'Ueno Park & Museums', cat: 'park', cost: 5, lat: 35.7145, lng: 139.7737, desc: 'A sprawling park with multiple world-class museums, a zoo, and cherry blossoms in spring.' },
+    ],
+    evening: [
+      { name: 'Shinjuku Golden Gai', cat: 'bar', cost: 25, lat: 35.6938, lng: 139.7036, desc: 'Narrow alleys packed with tiny bars, each seating 5-10 people. A true Tokyo experience.' },
+    ]
+  }
+}
 
 function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)]
 }
 
 function shuffleAndTake(arr, n) {
-  const shuffled = [...arr].sort(() => Math.random() - 0.5)
-  return shuffled.slice(0, n)
+  return [...arr].sort(() => 0.5 - Math.random()).slice(0, n)
 }
 
 /**
- * Generate a mock itinerary based on user preferences.
- * @param {object} inputs
- * @param {string} inputs.destination - e.g. "New York City"
- * @param {string} [inputs.vibes] - e.g. "foodie", "culture", "budget", "hidden gems"
- * @param {string} [inputs.budget_level] - "budget" | "moderate" | "luxury"
- * @param {number} [inputs.duration_days] - 1-5
- * @param {string} [inputs.preferences] - Additional text preferences
- * @returns {{ text: string }}
+ * Mocks an LLM call by generating a static JSON response.
  */
-export function mockGenerate(prompt, opts = {}) {
-  // Parse user inputs from the options (passed from service layer)
-  const inputs = opts.userInputs || {}
-  const destination = inputs.destination || 'New York City'
-  const vibes = (inputs.vibes || '').toLowerCase()
-  const budgetLevel = inputs.budget_level || 'moderate'
-  const duration = Math.min(Math.max(inputs.duration_days || 1, 1), 5)
+export async function mockGenerate(prompt, opts = {}) {
+  // Simulate delay
+  await new Promise(resolve => setTimeout(resolve, 800))
 
-  // Budget multiplier
-  const budgetMultipliers = { budget: 0.6, moderate: 1.0, luxury: 2.0 }
-  const bMulti = budgetMultipliers[budgetLevel] || 1.0
+  const destination = opts.userInputs?.destination || 'New York City'
+  const duration = opts.userInputs?.duration_days || 1
+  const budgetLevel = opts.userInputs?.budget_level || 'moderate'
+  const vibes = opts.userInputs?.vibes || ''
 
-  // Select boroughs based on vibes
-  const useBrooklyn = vibes.includes('hip') || vibes.includes('food') || vibes.includes('arts')
-  const useHidden = vibes.includes('hidden') || vibes.includes('off') || vibes.includes('local')
-  const boroughs = ['manhattan']
-  if (useBrooklyn) boroughs.push('brooklyn')
+  // Check for Premium hidden gems — use venues from userInputs directly
+  const premiumVenues = opts.userInputs?.venues || []
+  const useHidden = premiumVenues.length > 0
+  const bMulti = budgetLevel === 'luxury' ? 2.5 : (budgetLevel === 'budget' ? 0.6 : 1.0)
+  
+  // Select city-appropriate venue data and districts
+  const destLower = destination.toLowerCase()
+  const isTokyo = destLower.includes('tokyo')
+  const venueData = isTokyo ? TOKYO_VENUES : NYC_VENUES
+  const districts = isTokyo ? ['shinjuku', 'shitamachi'] : ['manhattan', 'brooklyn']
+  const tips = isTokyo
+    ? [
+      'Get a Suica card for easy train travel — tap on/off across all Tokyo transit.',
+      'Many restaurants have ticket machines outside. Just insert cash, press the picture, and hand the ticket to the chef.',
+      'Convenience stores (konbini) in Japan are next-level — 7-Eleven egg salad sandwiches are a must-try.',
+      'The Yamanote loop line connects all major Tokyo stations. It circles in 60 minutes.',
+      'Learn two phrases: "Sumimasen" (excuse me / sorry) and "Arigato gozaimasu" (thank you).',
+    ]
+    : [
+      'Book popular restaurants at least a week in advance.',
+      'Get a MetroCard or OMNY tap for unlimited subway rides.',
+      'The NYC Ferry is the city\'s best-kept secret — great views, cheap fares.',
+      'Many museums have pay-what-you-wish hours. Check their websites!',
+      'Walk between neighbourhoods to discover hidden spots not on any map.',
+    ]
 
-  // Build days
   const days = []
+
   for (let d = 1; d <= duration; d++) {
-    const borough = pickRandom(boroughs)
-    const venues = NYC_VENUES[borough]
+    const district = pickRandom(districts)
+    const venues = venueData[district]
     const themeIndex = (d - 1) % THEMES.length
     const themePrefix = THEMES[themeIndex]
 
@@ -138,10 +136,23 @@ export function mockGenerate(prompt, opts = {}) {
     const afternoonVenues = shuffleAndTake(venues.afternoon, 2)
     const eveningVenues = shuffleAndTake(venues.evening, 1)
 
-    // Add a hidden gem on longer trips
+    // Add a hidden gem if available and user is premium
     const extraVenues = []
-    if (d % 2 === 0 && useHidden && NYC_VENUES.hidden.length > 0) {
-      extraVenues.push(pickRandom(NYC_VENUES.hidden))
+    if (useHidden && d === 1) {
+      // Inject one hidden gem on day 1 using actual venue data
+      const gem = pickRandom(premiumVenues)
+      extraVenues.push({
+        name: gem.name,
+        description: `${gem.description} Insider tip: ${gem.local_tip}`,
+        category: gem.category || 'hidden_gem',
+        timing: '11:00 AM - 12:30 PM',
+        transport: 'A quick 10 min walk from your morning spot.',
+        latitude: gem.latitude,
+        longitude: gem.longitude,
+        estimated_cost: Math.round((gem.estimated_cost || 15) * bMulti),
+        booking_url: null,
+        is_hidden_gem: true, // flag for the UI to show Premium badge
+      })
     }
 
     const items = [
@@ -149,60 +160,46 @@ export function mockGenerate(prompt, opts = {}) {
         name: v.name,
         description: v.desc,
         category: v.category,
-        timing: '9:00 AM - 11:00 AM',
-        transport: d === 1 ? 'Starting from your hotel' : 'Take the subway from your previous stop',
+        timing: '9:00 AM - 10:30 AM',
+        transport: d === 1 ? 'Starting from your hotel' : isTokyo ? 'Take the Yamanote line to your next stop' : 'Take the subway from your previous stop',
         latitude: v.lat,
         longitude: v.lng,
         estimated_cost: Math.round(v.cost * bMulti),
         booking_url: null,
-        time_slot: 'morning',
       })),
+      ...extraVenues,
       ...afternoonVenues.map((v, i) => ({
         name: v.name,
         description: v.desc,
         category: v.category,
-        timing: i === 0 ? '11:30 AM - 1:30 PM' : '2:00 PM - 4:00 PM',
-        transport: i === 0 ? '15 min walk or 5 min Uber' : 'Take the subway — 10 min ride',
+        timing: i === 0 ? '1:30 PM - 3:30 PM' : '4:00 PM - 5:30 PM',
+        transport: i === 0 ? (isTokyo ? '15 min walk or short taxi ride' : '15 min walk or 5 min Uber') : isTokyo ? 'Take the Tokyo Metro — 10 min ride' : 'Take the subway — 10 min ride',
         latitude: v.lat,
         longitude: v.lng,
         estimated_cost: Math.round(v.cost * bMulti),
         booking_url: null,
-        time_slot: 'afternoon',
       })),
       ...eveningVenues.map(v => ({
         name: v.name,
         description: v.desc,
         category: v.category,
-        timing: '6:30 PM - 9:00 PM',
-        transport: 'Take the subway or a 10 min Uber',
+        timing: '7:00 PM - 9:30 PM',
+        transport: isTokyo ? 'Take the train or a short taxi ride' : 'Take the subway or a 10 min Uber',
         latitude: v.lat,
         longitude: v.lng,
         estimated_cost: Math.round(v.cost * bMulti),
         booking_url: null,
-        time_slot: 'evening',
-      })),
-      ...extraVenues.map(v => ({
-        name: v.name,
-        description: v.desc,
-        category: v.category,
-        timing: '10:00 AM - 12:00 PM',
-        transport: 'Take the subway — about 20 min from midtown',
-        latitude: v.lat,
-        longitude: v.lng,
-        estimated_cost: Math.round(v.cost * bMulti),
-        booking_url: null,
-        time_slot: 'morning',
       })),
     ]
 
     days.push({
       day_number: d,
-      theme: `${themePrefix} — ${borough.charAt(0).toUpperCase() + borough.slice(1)}`,
+      theme: `${themePrefix} — ${district.charAt(0).toUpperCase() + district.slice(1)}`,
       items,
     })
   }
 
-  const totalCost = days.reduce((sum, d) =>
+  const totalCost = days.reduce((sum, d) => 
     sum + d.items.reduce((s, i) => s + (i.estimated_cost || 0), 0), 0
   )
 
@@ -214,13 +211,7 @@ export function mockGenerate(prompt, opts = {}) {
     vibes: vibes || 'balanced',
     days,
     total_estimated_cost: totalCost,
-    notes: `Pro-tip: ${pickRandom([
-      'Book popular restaurants at least a week in advance.',
-      'Get a MetroCard or OMNY tap for unlimited subway rides.',
-      'The NYC Ferry is the city\'s best-kept secret — great views, cheap fares.',
-      'Many museums have pay-what-you-wish hours. Check their websites!',
-      'Walk between neighbourhoods to discover hidden spots not on any map.',
-    ])}`,
+    notes: `Pro-tip: ${pickRandom(tips)}`,
   }
 
   return {

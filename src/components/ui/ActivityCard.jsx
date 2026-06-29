@@ -17,6 +17,7 @@ export default function ActivityCard({
   variant = 'timeline',
   onClick,
   className,
+  isHiddenGem,
 }) {
   if (variant === 'map') {
     return (
@@ -67,6 +68,11 @@ export default function ActivityCard({
         <div className="flex items-start justify-between gap-2">
           <h4 className="font-body font-semibold text-text-primary text-sm leading-tight">
             {title}
+            {isHiddenGem && (
+              <span className="inline-flex items-center gap-1 ml-1.5 px-1.5 py-0.5 rounded-full bg-gradient-to-r from-teal to-violet text-white text-[9px] font-bold uppercase tracking-wider leading-none">
+                ✨ Premium
+              </span>
+            )}
           </h4>
         </div>
         <div className="flex items-center gap-3 mt-1.5 flex-wrap">

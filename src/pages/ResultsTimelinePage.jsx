@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { Button, TimelineContainer, TimelineItem, ActivityCard } from '../components/ui'
+import { Button, TimelineContainer, TimelineItem, ActivityCard, ShareSheet, PremiumUpsell } from '../components/ui'
 
 /**
  * Results — Timeline View (Screen 4)
  * Presents the curated itinerary as a scannable vertical timeline.
  */
-export default function ResultsTimelinePage({ itinerary, onBack, onViewDetail, onToggleView }) {
+export default function ResultsTimelinePage({ itinerary, onBack, onViewDetail, onToggleView, onGoPremium }) {
+  const [showShare, setShowShare] = useState(false)
+  const [showPremium, setShowPremium] = useState(false)
   const items = itinerary?.days?.[0]?.items || []
   const total = itinerary?.total_estimated_cost || 0
 
@@ -74,7 +76,7 @@ export default function ResultsTimelinePage({ itinerary, onBack, onViewDetail, o
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 cursor-pointer" aria-label="Share">
+            <button onClick={() => setShowShare(true)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 cursor-pointer" aria-label="Share">
               <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
               </svg>
@@ -117,11 +119,35 @@ export default function ResultsTimelinePage({ itinerary, onBack, onViewDetail, o
                   duration={item.duration}
                   tags={item.tags}
                   category={item.category}
+                  isHiddenGem={item.is_hidden_gem}
                   onClick={() => onViewDetail?.(item)}
                 />
               </TimelineItem>
             ))}
           </TimelineContainer>
+
+          {/* Subtle Premium upsell banner */}
+          <div className="mt-8 mb-4">
+            <button
+              onClick={() => onGoPremium?.()}
+              className="w-full flex items-center justify-between bg-gradient-to-r from-teal/5 to-violet/5 border border-teal/20 rounded-[12px] p-4 hover:from-teal/10 hover:to-violet/10 transition-all cursor-pointer group text-left"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal to-violet flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-text-primary font-body font-semibold text-sm">Go Premium ✨</p>
+                  <p className="text-text-muted text-[11px] font-body">Unlimited itineraries, offline access & more</p>
+                </div>
+              </div>
+              <svg className="w-4 h-4 text-text-muted group-hover:text-teal transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="m9 5 7 7-7 7" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -139,6 +165,14 @@ export default function ResultsTimelinePage({ itinerary, onBack, onViewDetail, o
           </Button>
         </div>
       </div>
+
+      {/* Share Sheet */}
+      {showShare && (
+        <ShareSheet itinerary={itinerary} onClose={() => setShowShare(false)} />
+      )}
+      {showPremium && (
+        <PremiumUpsell trigger="results" onClose={() => setShowPremium(false)} onUpgrade={() => {}} />
+      )}
     </div>
   )
 }

@@ -1,17 +1,15 @@
-/**
- * databaseService.js
- * CRUD operations for itineraries and itinerary_items via team-db CLI.
- *
- * IMPORTANT: Each team-db call is a separate SQLite connection,
- * so we use INSERT ... RETURNING id instead of last_insert_rowid().
- */
-
 import { execSync } from 'child_process'
 
 /**
- * Execute a SQL statement via team-db CLI.
- * @param {string} sql - Single SQL statement
- * @returns {Array} Result rows
+ * databaseService.js
+ * Provides high-level methods for interacting with the team's shared Turso database.
+ * Executes SQL via the 'team-db' CLI tool.
+ */
+
+/**
+ * Execute a raw SQL statement via team-db.
+ * @param {string} sql
+ * @returns {Array} - JSON parsed result rows
  */
 function execSQL(sql) {
   try {
@@ -37,7 +35,6 @@ function execSQL(sql) {
 export function saveItinerary(itinerary) {
   const escapedTitle = itinerary.title.replace(/'/g, "''")
   const escapedDest = itinerary.destination.replace(/'/g, "''")
-
   const prefs = JSON.stringify({
     budget_level: itinerary.budget_level,
     notes: itinerary.notes,
@@ -46,7 +43,6 @@ export function saveItinerary(itinerary) {
 
   // 1. Insert the itinerary and get ID via RETURNING
   const insertSQL = `INSERT INTO itineraries (title, destination, preferences, duration_days, budget_level) VALUES ('${escapedTitle}', '${escapedDest}', '${prefs}', ${itinerary.duration_days}, '${itinerary.budget_level}') RETURNING id`
-
   const insertResult = execSQL(insertSQL)
   const itineraryId = insertResult[0].id
 
@@ -65,7 +61,6 @@ export function saveItinerary(itinerary) {
       const timing = item.timing ? `'${item.timing.replace(/'/g, "''")}'` : 'NULL'
 
       const itemSQL = `INSERT INTO itinerary_items (itinerary_id, day_number, name, description, category, latitude, longitude, estimated_cost, booking_url, order_index, timing, transport) VALUES (${itineraryId}, ${day.day_number}, '${escapedName}', '${escapedDesc}', '${item.category}', ${lat}, ${lng}, ${cost}, ${bookingUrl}, ${i}, ${timing}, ${transport}) RETURNING id`
-
       const itemResult = execSQL(itemSQL)
       itemIds.push(itemResult[0].id)
     }
@@ -113,4 +108,28 @@ export function listItineraries(limit = 20) {
   )
 }
 
-export default { saveItinerary, getItinerary, listItineraries }
+/**
+ * List venues (Hidden Gems).
+ * @param {object} [filters]
+ * @param {string} [filters.city] - Filter by city name
+ * @param {string} [filters.borough]
+ * @param {string} [filters.category]
+ * @param {number} [filters.limit=100]
+ * @returns {Array}
+ */
+export function getVenues(filters = {}) {
+  let sql = 'SELECT * FROM venues'
+  const conditions = []
+  if (filters.city) conditions.push(`city = '${filters.city.replace(/'/g, "''")}'`)
+  if (filters.borough) conditions.push(`borough = '${filters.borough.replace(/'/g, "''")}'`)
+  if (filters.category) conditions.push(`category = '${filters.category.replace(/'/g, "''")}'`)
+  
+  if (conditions.length > 0) {
+    sql += ' WHERE ' + conditions.join(' AND ')
+  }
+  
+  sql += ` LIMIT ${filters.limit || 100}`
+  return execSQL(sql)
+}
+
+export default { saveItinerary, getItinerary, listItineraries, getVenues }

@@ -104,6 +104,7 @@ function normalizeItem(item, index) {
     estimated_cost: typeof item.estimated_cost === 'number' ? item.estimated_cost : null,
     booking_url: typeof item.booking_url === 'string' ? item.booking_url : null,
     time_slot: timeSlot,
+    is_hidden_gem: item.is_hidden_gem === true,
   }
 }
 

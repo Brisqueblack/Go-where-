@@ -45,7 +45,7 @@ app.get('/api/health', (_req, res) => {
 // ── Generate itinerary ─────────────────────────────────────────────────────
 app.post('/api/itineraries/generate', async (req, res) => {
   try {
-    const { destination, duration_days, budget_level, vibes, preferences, user_email } = req.body
+    const { destination, duration_days, budget_level, vibes, preferences, user_email, is_premium } = req.body
 
     // Validate required field
     if (!destination) {
@@ -63,6 +63,7 @@ app.post('/api/itineraries/generate', async (req, res) => {
       vibes: vibes || 'balanced',
       preferences: preferences || '',
       user_email,
+      isPremium: is_premium === true || is_premium === 'true',
     }, { skipDb: false })
 
     if (result.success) {
@@ -102,6 +103,51 @@ app.get('/api/itineraries', (_req, res) => {
       'SELECT id, title, destination, duration_days, budget_level, created_at FROM itineraries ORDER BY created_at DESC LIMIT 20'
     )
     res.json(rows)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// ── POST feedback ──────────────────────────────────────────────────────────
+app.post('/api/feedback', (req, res) => {
+  try {
+    const { itinerary_id, rating, comment, source } = req.body
+
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ success: false, error: 'Rating must be 1-5' })
+    }
+
+    const itinId = itinerary_id != null ? itinerary_id : 'NULL'
+    const escapedComment = comment ? `'${comment.replace(/'/g, "''")}'` : 'NULL'
+    const escapedSource = source ? `'${source.replace(/'/g, "''")}'` : "'results_page'"
+
+    dbQuery(
+      `INSERT INTO user_feedback (itinerary_id, rating, comment, source) VALUES (${itinId}, ${rating}, ${escapedComment}, ${escapedSource})`
+    )
+
+    res.json({ success: true, message: 'Thanks for the feedback! 🙌' })
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message })
+  }
+})
+
+// ── GET feedback summary (admin) ────────────────────────────────────────────
+app.get('/api/feedback', (_req, res) => {
+  try {
+    const summary = dbQuery(
+      `SELECT COUNT(*) as total, ROUND(AVG(rating), 1) as avg_rating,
+              SUM(CASE WHEN rating >= 4 THEN 1 ELSE 0 END) as positive,
+              SUM(CASE WHEN rating <= 2 THEN 1 ELSE 0 END) as negative
+       FROM user_feedback`
+    )
+    const recent = dbQuery(
+      `SELECT f.id, f.rating, f.comment, f.source, f.created_at,
+              COALESCE(i.title, '(deleted)') as itinerary_title
+       FROM user_feedback f
+       LEFT JOIN itineraries i ON f.itinerary_id = i.id
+       ORDER BY f.created_at DESC LIMIT 20`
+    )
+    res.json({ summary: summary[0], recent })
   } catch (err) {
     res.status(500).json({ error: err.message })
   }
