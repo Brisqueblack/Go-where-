@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, ChipGroup } from '../components/ui'
 
 const EXPANSION_CITIES = [
@@ -25,6 +25,17 @@ const VIBE_OPTIONS = [
 export default function HomePage({ onNavigate, preferences, setPreferences }) {
   const [location, setLocation] = useState(preferences.location || '')
   const [selectedVibes, setSelectedVibes] = useState(preferences.vibes || [])
+  const [showHint, setShowHint] = useState(() => {
+    return localStorage.getItem('vibevoyage_seen_hint') !== 'true'
+  })
+
+  // Dismiss hint on first interaction
+  useEffect(() => {
+    if (showHint && (location.trim() || selectedVibes.length > 0)) {
+      setShowHint(false)
+      localStorage.setItem('vibevoyage_seen_hint', 'true')
+    }
+  }, [location, selectedVibes, showHint])
 
   const handleStartPlanning = () => {
     setPreferences((prev) => ({
@@ -127,6 +138,23 @@ export default function HomePage({ onNavigate, preferences, setPreferences }) {
         >
           Find My Vibe ✨
         </Button>
+
+        {/* First-visit onboarding hint */}
+        {showHint && !isReady && (
+          <div className="mt-3 animate-fade-in">
+            <div className="relative bg-white/10 text-white/80 text-xs font-body px-4 py-2.5 rounded-lg text-center max-w-xs mx-auto border border-white/10">
+              <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white/10 rotate-45 border-t border-l border-white/10" />
+              Pick a mood or enter a city to get started ✨
+            </div>
+          </div>
+        )}
+
+        {/* Disabled-state helper text */}
+        {!showHint && !isReady && (
+          <p className="mt-3 text-text-muted/60 text-xs font-body text-center animate-fade-in">
+            Pick a mood or enter a city to get started ✨
+          </p>
+        )}
 
         {/* 5-City Expansion Section */}
         <div className="w-full max-w-lg mt-14 mb-4">
