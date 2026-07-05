@@ -1,6 +1,14 @@
 import { useState } from 'react'
 import { Button, ChipGroup } from '../components/ui'
 
+const EXPANSION_CITIES = [
+  { name: 'Boston', icon: '🗺️', gem: "Bova's Bakery at midnight", slug: 'boston', color: 'from-teal/20 to-coral/10' },
+  { name: 'Philadelphia', icon: '🔔', gem: 'Secret gas-lit alley in Society Hill', slug: 'philadelphia', color: 'from-coral/20 to-navy/10' },
+  { name: 'Washington D.C.', icon: '🏛️', gem: 'Tidal Basin at dawn, no crowds', slug: 'dc', color: 'from-violet/20 to-teal/10' },
+  { name: 'Chicago', icon: '🌊', gem: 'Hidden lily pond in Lincoln Park', slug: 'chicago', color: 'from-teal/20 to-violet/10' },
+  { name: 'Miami', icon: '🌴', gem: 'Hand-rolled cigars in Little Havana', slug: 'miami', color: 'from-coral/20 to-teal/10' },
+]
+
 const VIBE_OPTIONS = [
   { value: 'date-night', label: '🌆 Date Night' },
   { value: 'solo', label: '🏙️ Solo Explorer' },
@@ -119,6 +127,56 @@ export default function HomePage({ onNavigate, preferences, setPreferences }) {
         >
           Find My Vibe ✨
         </Button>
+
+        {/* 5-City Expansion Section */}
+        <div className="w-full max-w-lg mt-14 mb-4">
+          {/* Section header */}
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center gap-2 bg-white/5 rounded-full px-4 py-1.5 border border-white/10">
+              <span className="text-xs">🌎</span>
+              <span className="text-teal text-xs font-semibold font-body uppercase tracking-wider">
+                Now Live
+              </span>
+            </div>
+            <h2 className="text-white font-heading font-bold text-xl mt-3 leading-tight">
+              5 New Cities. <span className="text-teal">Endless Hidden Gems.</span>
+            </h2>
+            <p className="text-text-muted text-sm mt-1 max-w-sm mx-auto">
+              Your local friend has arrived in these five cities — and knows the spots nobody else does.
+            </p>
+          </div>
+
+          {/* City cards — responsive grid */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+            {EXPANSION_CITIES.map((city) => (
+              <div
+                key={city.slug}
+                className="group relative bg-white/5 rounded-xl p-4 border border-white/10 hover:border-teal/40 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-teal/5"
+              >
+                {/* Gradient accent */}
+                <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${city.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
+
+                {/* City icon */}
+                <div className="relative text-2xl mb-2">{city.icon}</div>
+
+                {/* City name */}
+                <h3 className="relative text-white font-heading font-semibold text-sm leading-tight">
+                  {city.name}
+                </h3>
+
+                {/* Hidden gem teaser */}
+                <p className="relative text-text-muted text-xs mt-1 leading-relaxed line-clamp-2">
+                  {city.gem}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom tagline */}
+          <p className="text-center text-text-muted/60 text-xs mt-5 font-body">
+            Tell us your mood. We'll plan the day — in any of these cities.
+          </p>
+        </div>
       </div>
     </div>
   )
