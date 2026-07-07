@@ -36,14 +36,14 @@ const GLOBS = [
   '/home/team/shared/dc-hidden-gems.json',
   '/home/team/shared/chicago-hidden-gems.json',
   '/home/team/shared/miami-hidden-gems.json',
-  // ── 7 New US Cities — files created by designer ──
-  '/home/team/shared/los-angeles-hidden-gems.json',
-  '/home/team/shared/las-vegas-hidden-gems.json',
-  '/home/team/shared/orlando-hidden-gems.json',
-  '/home/team/shared/san-francisco-hidden-gems.json',
-  '/home/team/shared/seattle-hidden-gems.json',
-  '/home/team/shared/nashville-hidden-gems.json',
-  '/home/team/shared/austin-hidden-gems.json',
+  // ── 7 New US Cities — files created by designer in hidden-gems/ ──
+  '/home/team/shared/hidden-gems/la-hidden-gems.json',
+  '/home/team/shared/hidden-gems/las-vegas-hidden-gems.json',
+  '/home/team/shared/hidden-gems/orlando-hidden-gems.json',
+  '/home/team/shared/hidden-gems/san-francisco-hidden-gems.json',
+  '/home/team/shared/hidden-gems/seattle-hidden-gems.json',
+  '/home/team/shared/hidden-gems/nashville-hidden-gems.json',
+  '/home/team/shared/hidden-gems/austin-hidden-gems.json',
 ]
 
 let totalImported = 0
