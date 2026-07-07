@@ -24,7 +24,6 @@ export async function generateItinerary(inputs, opts = {}) {
           'dc': 'Washington D.C.',
           'chicago': 'Chicago',
           'miami': 'Miami',
-          // ── 7 New US Cities ──
           'los angeles': 'Los Angeles',
           'la': 'Los Angeles',
           'las vegas': 'Las Vegas',
@@ -36,7 +35,14 @@ export async function generateItinerary(inputs, opts = {}) {
           'nashville': 'Nashville',
           'austin': 'Austin',
         }
-        const cityFilter = Object.entries(cityMap).find(([key]) => destLower.includes(key))?.[1]
+        // Sort by key length (longest first) so 'las vegas' matches before 'la'
+        const entries = Object.entries(cityMap).sort(([a], [b]) => b.length - a.length)
+        // Use word-boundary matching so 'la' doesn't match "las vegas" or "orlando"
+        const match = entries.find(([key]) => {
+          const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+          return new RegExp('(^|\\s|,|\\.|-|\\/)' + escaped + '($|\\s|,|\\.|-|\\/)', 'i').test(destLower)
+        })
+        const cityFilter = match ? match[1] : null
 
         if (cityFilter) {
           const venues = getVenues({ city: cityFilter, limit: 10 })
