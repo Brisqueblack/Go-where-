@@ -24,6 +24,17 @@ export async function generateItinerary(inputs, opts = {}) {
           'dc': 'Washington D.C.',
           'chicago': 'Chicago',
           'miami': 'Miami',
+          // ── 7 New US Cities ──
+          'los angeles': 'Los Angeles',
+          'la': 'Los Angeles',
+          'las vegas': 'Las Vegas',
+          'vegas': 'Las Vegas',
+          'orlando': 'Orlando',
+          'san francisco': 'San Francisco',
+          'sf': 'San Francisco',
+          'seattle': 'Seattle',
+          'nashville': 'Nashville',
+          'austin': 'Austin',
         }
         const cityFilter = Object.entries(cityMap).find(([key]) => destLower.includes(key))?.[1]
 

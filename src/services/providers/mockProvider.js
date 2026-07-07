@@ -77,6 +77,220 @@ const TOKYO_VENUES = {
   }
 }
 
+// ── 7 New US Cities: Los Angeles, Las Vegas, Orlando, San Francisco, Seattle, Nashville, Austin ──
+
+const LA_VENUES = {
+  westside: {
+    morning: [
+      { name: 'Venice Beach Boardwalk', cat: 'outdoor', cost: 0, lat: 33.9925, lng: -118.4775, desc: 'The iconic oceanfront promenade — street performers, skate park, muscle beach, and endless people-watching.' },
+      { name: 'Great White (Venice)', cat: 'restaurant', cost: 15, lat: 33.9889, lng: -118.4701, desc: 'A bright, airy California café with legendary avocado toast and acai bowls. The patio is pure LA sunshine.' },
+    ],
+    afternoon: [
+      { name: 'Getty Center', cat: 'museum', cost: 0, lat: 34.0775, lng: -118.4750, desc: 'Stunning hilltop museum with world-class art, architecture gardens, and panoramic views of the entire LA basin. Parking $20, admission free.' },
+      { name: 'Abbot Kinney Boulevard', cat: 'shopping', cost: 20, lat: 33.9905, lng: -118.4695, desc: 'Venice\'s coolest street — indie boutiques, art galleries, and the best people-watching west of the 405.' },
+    ],
+    evening: [
+      { name: 'Gjelina (Venice)', cat: 'restaurant', cost: 40, lat: 33.9906, lng: -118.4694, desc: 'The quintessential Venice hot spot. Wood-fired veggies, incredible pizzas, and a scene that defines LA cool.' },
+      { name: 'The Bungalow (Santa Monica)', cat: 'bar', cost: 20, lat: 34.0072, lng: -118.4873, desc: 'A whimsical beachside club with fire pits, lawn games, and the best sunset cocktails in Santa Monica.' },
+    ]
+  },
+  eastside: {
+    morning: [
+      { name: 'Grand Central Market (Downtown)', cat: 'restaurant', cost: 12, lat: 34.0405, lng: -118.2502, desc: 'A historic 1917 market hall with dozens of food stalls. Get the egg sandwich at Eggslut or tacos at Villa Moreliana.' },
+      { name: 'Griffith Observatory', cat: 'culture', cost: 0, lat: 34.1184, lng: -118.3004, desc: 'Free science exhibits, the best views of the Hollywood sign and DTLA, and spectacular sunset panoramas.' },
+    ],
+    afternoon: [
+      { name: 'The Broad Museum', cat: 'museum', cost: 0, lat: 34.0537, lng: -118.2513, desc: 'Contemporary art museum with Yayoi Kusama\'s Infinity Mirror Rooms. Free but reserve tickets in advance.' },
+      { name: 'Silver Lake Reservoir Walk', cat: 'outdoor', cost: 0, lat: 34.1001, lng: -118.2764, desc: 'A 2-mile loop around the reservoir with stunning views of the hills and the iconic Silver Lake dog park.' },
+    ],
+    evening: [
+      { name: 'Sqirl (Silver Lake)', cat: 'restaurant', cost: 18, lat: 34.1027, lng: -118.2684, desc: 'The cult-favorite brunch spot does dinner too. Famous for their housemade jam and perfectly runny eggs.' },
+      { name: 'The Echo (Echo Park)', cat: 'entertainment', cost: 20, lat: 34.0778, lng: -118.2609, desc: 'Legendary indie music venue where bands like Arcade Fire played before they were famous. Cheap drinks, great sound.' },
+    ]
+  }
+}
+
+const VEGAS_VENUES = {
+  the_strip: {
+    morning: [
+      { name: 'Bellagio Conservatory & Botanical Gardens', cat: 'park', cost: 0, lat: 36.1125, lng: -115.1768, desc: 'A stunning indoor garden that changes with the seasons. Over-the-top floral displays that are completely free.' },
+      { name: 'Peppermill Restaurant & Fireside Lounge', cat: 'restaurant', cost: 15, lat: 36.1302, lng: -115.1565, desc: 'A Vegas classic since 1972 — enormous portions, neon atmosphere, and the most iconic lounge on the Strip.' },
+    ],
+    afternoon: [
+      { name: 'The Neon Museum (Boneyard)', cat: 'culture', cost: 20, lat: 36.1783, lng: -115.1367, desc: 'An outdoor museum of retired Vegas signs. The guided tour tells the city\'s history through its iconic neon.' },
+      { name: 'The Forum Shops at Caesars', cat: 'shopping', cost: 15, lat: 36.1161, lng: -115.1739, desc: 'A shopping mall that feels like a Roman fantasy — talking statues, indoor fountains, and luxury boutiques.' },
+    ],
+    evening: [
+      { name: 'Lakeside Dining at Wynn', cat: 'restaurant', cost: 75, lat: 36.1271, lng: -115.1624, desc: 'Upscale lakeside dining with a waterfall view. The $49 prime rib special is the best deal on the Strip.' },
+      { name: 'The Chandelier Bar (The Cosmopolitan)', cat: 'bar', cost: 25, lat: 36.1099, lng: -115.1761, desc: 'A three-story bar wrapped in 2 million crystal beads. The hidden cocktail menu is legendary.' },
+    ]
+  },
+  downtown: {
+    morning: [
+      { name: 'Fremont Street Experience', cat: 'outdoor', cost: 0, lat: 36.1692, lng: -115.1430, desc: 'The original Vegas — a five-block pedestrian mall with the giant Viva Vision light canopy. Free zip line overhead.' },
+      { name: 'Evel Pie (Fremont East)', cat: 'restaurant', cost: 10, lat: 36.1708, lng: -115.1413, desc: 'A funky Evel Knievel-themed pizzeria with surprisingly great pizza. The "Living Dangerously" pie with jalapeños is a must.' },
+    ],
+    afternoon: [
+      { name: 'The Mob Museum', cat: 'museum', cost: 27, lat: 36.1716, lng: -115.1442, desc: 'Housed in a former federal courthouse, this interactive museum tells the real story of organized crime in America.' },
+      { name: 'Container Park', cat: 'shopping', cost: 10, lat: 36.1700, lng: -115.1400, desc: 'A shopping and entertainment complex made from shipping containers. The giant praying mantis sculpture shoots fire.' },
+    ],
+    evening: [
+      { name: 'Esther\'s Kitchen (Arts District)', cat: 'restaurant', cost: 40, lat: 36.1667, lng: -115.1455, desc: 'The best restaurant in downtown Vegas. Handmade pasta, local ingredients, and a warm neighborhood vibe.' },
+      { name: 'The Griffin (Fremont East)', cat: 'bar', cost: 12, lat: 36.1712, lng: -115.1416, desc: 'A dark, moody bar with a massive stone fireplace. The absinthe selection is the best in Vegas.' },
+    ]
+  }
+}
+
+const ORLANDO_VENUES = {
+  theme_park_area: {
+    morning: [
+      { name: 'Lake Eola Park', cat: 'park', cost: 0, lat: 28.5436, lng: -81.3795, desc: 'Downtown Orlando\'s beautiful urban oasis. Rent a swan-shaped paddleboat and walk the 0.9-mile scenic loop.' },
+      { name: 'The Glass Knife (Winter Park)', cat: 'cafe', cost: 12, lat: 28.5942, lng: -81.3486, desc: 'An impossibly elegant bakery with stunning cakes and pastries. The honey lavender latte is a local obsession.' },
+    ],
+    afternoon: [
+      { name: 'Morse Museum of American Art', cat: 'museum', cost: 6, lat: 28.5978, lng: -81.3484, desc: 'Houses the world\'s most comprehensive collection of Tiffany glass. The chapel interior is breathtaking.' },
+      { name: 'Wekiva Island', cat: 'outdoor', cost: 10, lat: 28.7482, lng: -81.3853, desc: 'A riverside oasis with kayak rentals, a floating dock bar, and live music. Paddle the spring-fed Wekiva River.' },
+    ],
+    evening: [
+      { name: 'Domu Chibi (Mills 50)', cat: 'restaurant', cost: 20, lat: 28.5605, lng: -81.3685, desc: 'Incredible Japanese ramen and fried chicken. The spicy miso ramen and "Karaage" chicken are the stuff of legend.' },
+      { name: 'The Courtesy Bar', cat: 'bar', cost: 15, lat: 28.5411, lng: -81.3798, desc: 'A hidden craft cocktail lounge in a historic house. No sign out front — look for the red door.' },
+    ]
+  },
+  winter_park: {
+    morning: [
+      { name: 'Winter Park Farmers Market', cat: 'shopping', cost: 8, lat: 28.5972, lng: -81.3498, desc: 'A charming Saturday morning market in a historic train depot. Fresh produce, local honey, and homemade tamales.' },
+    ],
+    afternoon: [
+      { name: 'Park Avenue (Winter Park)', cat: 'shopping', cost: 15, lat: 28.5975, lng: -81.3487, desc: 'Winter Park\'s tree-lined main street with upscale boutiques, art galleries, and sidewalk cafes. Very un-Orlando.' },
+      { name: 'Harry P. Leu Gardens', cat: 'park', cost: 10, lat: 28.5698, lng: -81.3557, desc: '50 acres of stunning gardens on the shores of Lake Rowena. The butterfly garden and tropical collection are magical.' },
+    ],
+    evening: [
+      { name: 'Ravenous Pig (Winter Park)', cat: 'restaurant', cost: 45, lat: 28.5979, lng: -81.3495, desc: 'A James Beard-nominated gastropub that put Orlando\'s food scene on the map. The cheddar biscuits are legendary.' },
+    ]
+  }
+}
+
+const SF_VENUES = {
+  downtown: {
+    morning: [
+      { name: 'Ferry Building Marketplace', cat: 'restaurant', cost: 12, lat: 37.7955, lng: -122.3940, desc: 'A historic terminal turned foodie paradise. Slab bacon sandwiches at Boccalone, oysters at Hog Island, and Blue Bottle coffee.' },
+      { name: 'Salesforce Park', cat: 'park', cost: 0, lat: 37.7890, lng: -122.3935, desc: 'A stunning 5.4-acre rooftop park hovering 70 feet above the streets. Native plants, a living roof, and free yoga classes.' },
+    ],
+    afternoon: [
+      { name: 'San Francisco Museum of Modern Art (SFMOMA)', cat: 'museum', cost: 25, lat: 37.7858, lng: -122.4008, desc: 'Seven floors of world-class contemporary art. The living wall and the Oculus staircase are architectural marvels.' },
+      { name: 'Chinatown Walking Tour', cat: 'culture', cost: 5, lat: 37.7941, lng: -122.4078, desc: 'The oldest Chinatown in North America. Walk through the Dragon Gate, visit the Golden Gate Fortune Cookie Factory, and grab dim sum.' },
+    ],
+    evening: [
+      { name: 'Tadich Grill', cat: 'restaurant', cost: 45, lat: 37.7938, lng: -122.4015, desc: 'SF\'s oldest restaurant (1849). The cioppino and sand dabs are legendary. Wood-paneled booths and proper old-school service.' },
+      { name: 'Bourbon & Branch', cat: 'bar', cost: 18, lat: 37.7823, lng: -122.4102, desc: 'A true speakeasy — no sign, password required (check their website). The craft cocktails are worth the secrecy.' },
+    ]
+  },
+  the_mission: {
+    morning: [
+      { name: 'Tartine Bakery', cat: 'cafe', cost: 8, lat: 37.7606, lng: -122.4208, desc: 'The legendary bakery that defined SF\'s bread renaissance. The morning bun and country loaf are worth the inevitable line.' },
+      { name: 'Dolores Park', cat: 'park', cost: 0, lat: 37.7596, lng: -122.4269, desc: 'SF\'s most iconic park — sunbathers, DJs, and the best people-watching in the city. Spectacular skyline views.' },
+    ],
+    afternoon: [
+      { name: 'Clarion Alley Murals', cat: 'art', cost: 0, lat: 37.7635, lng: -122.4213, desc: 'A vibrant alley covered in politically charged murals. The rotating outdoor gallery is the heart of Mission District street art.' },
+      { name: 'Mission Districtt Taqueria Crawl', cat: 'restaurant', cost: 10, lat: 37.7601, lng: -122.4207, desc: 'Hit La Taqueria (best carnitas), Taqueria El Farolito (best burrito), and Pancho Villa (best salsa bar). All within 3 blocks.' },
+    ],
+    evening: [
+      { name: 'Foreign Cinema', cat: 'restaurant', cost: 50, lat: 37.7614, lng: -122.4203, desc: 'An enchanting Mission restaurant that projects films on the courtyard wall. Oysters, wood-fired chicken, and old movies under the stars.' },
+      { name: 'The Chapel', cat: 'entertainment', cost: 25, lat: 37.7645, lng: -122.4211, desc: 'A stunning former mortuary turned music venue. Incredible acoustics, balcony seating, and an intimate atmosphere.' },
+    ]
+  }
+}
+
+const SEATTLE_VENUES = {
+  capitol_hill: {
+    morning: [
+      { name: 'Volunteer Park Conservatory', cat: 'park', cost: 0, lat: 47.6314, lng: -122.3254, desc: 'A stunning Victorian-style glass greenhouse with five display houses. The dahlia garden and views from the water tower are unbeatable.' },
+      { name: 'Victrola Coffee Roasters', cat: 'cafe', cost: 6, lat: 47.6145, lng: -122.3203, desc: 'The heart of Capitol Hill\'s coffee scene. Single-origin pour-overs in a bright, airy space with vinyl records spinning.' },
+    ],
+    afternoon: [
+      { name: 'Chihuly Garden & Glass', cat: 'museum', cost: 29, lat: 47.6210, lng: -122.3501, desc: 'Dale Chihuly\'s breathtaking glass sculptures in a cathedral-like hall. The glass ceiling installation is pure magic.' },
+      { name: 'Pike Place Market', cat: 'shopping', cost: 10, lat: 47.6092, lng: -122.3407, desc: 'America\'s oldest continuously operating farmers market. Watch fish fly, grab a bouquet from a flower stall, and find the original Starbucks.' },
+    ],
+    evening: [
+      { name: 'Canlis', cat: 'restaurant', cost: 100, lat: 47.6360, lng: -122.3465, desc: 'Seattle\'s most iconic fine dining restaurant with sweeping views of Lake Union. The tasting menu is a culinary journey.' },
+      { name: 'The Comet Tavern', cat: 'bar', cost: 8, lat: 47.6140, lng: -122.3197, desc: 'A grungy Capitol Hill dive bar that hasn\'t changed since the 90s. Cheap beer, a vintage jukebox, and pool tables.' },
+    ]
+  },
+  downtown: {
+    morning: [
+      { name: 'Ballard Locks & Fish Ladder', cat: 'culture', cost: 0, lat: 47.6659, lng: -122.3972, desc: 'Watch boats transition between Puget Sound and Lake Union. The underwater fish ladder viewing room shows salmon migrating upstream.' },
+    ],
+    afternoon: [
+      { name: 'Museum of Pop Culture (MoPOP)', cat: 'museum', cost: 28, lat: 47.6215, lng: -122.3492, desc: 'Frank Gehry\'s architectural masterpiece. The Sound Lab lets you play instruments from Nirvana to Kendrick Lamar.' },
+      { name: 'Discovery Park', cat: 'outdoor', cost: 0, lat: 47.6639, lng: -122.4055, desc: 'Seattle\'s largest park — 534 acres of forests, meadows, and a 2-mile loop to a lighthouse with breathtaking Puget Sound views.' },
+    ],
+    evening: [
+      { name: 'The Walrus and the Carpenter', cat: 'restaurant', cost: 45, lat: 47.6671, lng: -122.3967, desc: 'A James Beard Award-winning oyster bar in Ballard. Minimalist space, incredible raw bar, and the best seafood in Seattle.' },
+      { name: 'Sunset Tavern (Ballard)', cat: 'entertainment', cost: 12, lat: 47.6685, lng: -122.3839, desc: 'A legendary Ballard dive with live local music every night. The dance floor gets sweaty, the drinks are cheap.' },
+    ]
+  }
+}
+
+const NASHVILLE_VENUES = {
+  broadway: {
+    morning: [
+      { name: 'Ryman Auditorium Tour', cat: 'culture', cost: 25, lat: 36.1609, lng: -86.7766, desc: 'The "Mother Church of Country Music." The self-guided tour includes holographic performances and the history of the Grand Ole Opry.' },
+      { name: 'Pancake Pantry (Hillsboro Village)', cat: 'restaurant', cost: 10, lat: 36.1425, lng: -86.7962, desc: 'A Nashville institution since 1960. 23 varieties of pancakes — the sweet potato pecan is legendary.' },
+    ],
+    afternoon: [
+      { name: 'Country Music Hall of Fame', cat: 'museum', cost: 28, lat: 36.1586, lng: -86.7762, desc: 'A massive museum tracing country music from its roots to today. Elvis\'s gold Cadillac and Taylor Swift\'s costumes are on display.' },
+      { name: 'Centennial Park & The Parthenon', cat: 'park', cost: 0, lat: 36.1496, lng: -86.8134, desc: 'A full-scale replica of the Athenian Parthenon houses an art museum inside. The park has walking trails and a beautiful pond.' },
+    ],
+    evening: [
+      { name: 'Hattie B\'s Hot Chicken', cat: 'restaurant', cost: 14, lat: 36.1491, lng: -86.7900, desc: 'Nashville\'s most famous hot chicken. Choose your heat level from "Mild" to "Shut the Cluck Up." The pimento mac is essential.' },
+      { name: 'The Bluebird Cafe', cat: 'entertainment', cost: 15, lat: 36.1011, lng: -86.8258, desc: 'The legendary listening room where Garth Brooks and Taylor Swift were discovered. Intimate, acoustic, unforgettable.' },
+    ]
+  },
+  east_nashville: {
+    morning: [
+      { name: 'Five Points (East Nashville)', cat: 'shopping', cost: 10, lat: 36.1704, lng: -86.7547, desc: 'East Nashville\'s quirky commercial district — vintage shops, record stores, and indie boutiques in a walkable stretch.' },
+    ],
+    afternoon: [
+      { name: 'Shelby Park', cat: 'outdoor', cost: 0, lat: 36.1732, lng: -86.7461, desc: 'Nashville\'s biggest park with walking trails, a lake, and the Steel slab skate park. The greenway connects to the Cumberland River.' },
+      { name: 'The Basement East', cat: 'culture', cost: 10, lat: 36.1703, lng: -86.7543, desc: 'A beloved East Nashville music venue. The "I Believe in Nashville" mural outside is the most Instagrammed wall in the city.' },
+    ],
+    evening: [
+      { name: 'Lockeland Table', cat: 'restaurant', cost: 35, lat: 36.1703, lng: -86.7545, desc: 'A neighborhood farm-to-table restaurant with wood-fired pizzas and southern hospitality. The pimento cheese fritters are divine.' },
+      { name: 'The Fox Bar & Cocktail Club', cat: 'bar', cost: 16, lat: 36.1708, lng: -86.7542, desc: 'A dimly lit East Nashville speakeasy with inventive cocktails. No sign outside — look for the fox on the door.' },
+    ]
+  }
+}
+
+const AUSTIN_VENUES = {
+  downtown: {
+    morning: [
+      { name: 'Barton Springs Pool', cat: 'outdoor', cost: 5, lat: 30.2647, lng: -97.7713, desc: 'A natural spring-fed pool in Zilker Park. The 68-degree water is refreshing year-round. Go early to avoid the crowds.' },
+      { name: 'Veracruz All Natural', cat: 'restaurant', cost: 8, lat: 30.2685, lng: -97.7440, desc: 'Austin\'s best breakfast tacos — no debate. The migas taco with fresh salsa verde is a morning ritual for locals.' },
+    ],
+    afternoon: [
+      { name: 'Texas State Capitol', cat: 'culture', cost: 0, lat: 30.2747, lng: -97.7404, desc: 'Larger than the US Capitol (by 7 feet!). Free tours, stunning rotunda, and the best free air conditioning downtown.' },
+      { name: 'South Congress Avenue', cat: 'shopping', cost: 15, lat: 30.2551, lng: -97.7494, desc: 'Austin\'s most iconic street — vintage shops, weird boutiques, the "I Love You So Much" mural, and the Continental Club.' },
+    ],
+    evening: [
+      { name: 'Franklin Barbecue', cat: 'restaurant', cost: 25, lat: 30.2782, lng: -97.7342, desc: 'Widely considered the best barbecue in the world. Get in line by 9 AM (yes, for dinner). The brisket is transcendent.' },
+      { name: 'The Continental Club', cat: 'entertainment', cost: 15, lat: 30.2558, lng: -97.7493, desc: 'Austin\'s legendary honky-tonk on South Congress. Live music every night — rockabilly, country, blues, and soul.' },
+    ]
+  },
+  south_congress: {
+    morning: [
+      { name: 'Zilker Park Botanical Garden', cat: 'park', cost: 2, lat: 30.2687, lng: -97.7721, desc: 'A serene 31-acre garden with native Texas plants, a Japanese garden, and a butterfly trail. The most peaceful spot in Austin.' },
+    ],
+    afternoon: [
+      { name: 'The Blanton Museum of Art', cat: 'museum', cost: 12, lat: 30.2796, lng: -97.7348, desc: 'UT Austin\'s world-class art museum. The Ellsworth Kelly "Austin" chapel is a stunning standalone building of colored light.' },
+      { name: 'Lady Bird Lake Hike & Bike Trail', cat: 'outdoor', cost: 0, lat: 30.2622, lng: -97.7495, desc: 'A 10-mile loop around the lake with skyline views, the iconic Pfluger Pedestrian Bridge, and bat watching at sunset.' },
+    ],
+    evening: [
+      { name: 'Odd Duck (South Lamar)', cat: 'restaurant', cost: 40, lat: 30.2648, lng: -97.7583, desc: 'James Beard-nominated New American cuisine with Texas ingredients. The smoked carrots and goat dumplings are unforgettable.' },
+      { name: 'Hotel San José Lounge (South Congress)', cat: 'bar', cost: 14, lat: 30.2555, lng: -97.7495, desc: 'A mid-century minimalist courtyard bar with string lights, pool tables, and the coolest vibe on South Congress.' },
+    ]
+  }
+}
+
 // ── US Expansion Cities: Boston, Philadelphia, Washington DC, Chicago, Miami ──
 
 const US_CITIES_VENUES = {
@@ -246,6 +460,16 @@ function getTransport(cityKey, context) {
     dc: { subway: 'Take the Metro (Blue/Orange Line)', walk_uber: 'A pleasant walk or quick Metro ride', evening: 'Metro or a short Uber' },
     chicago: { subway: 'Take the Chicago "L" (Blue Line)', walk_uber: '10 min walk or a quick Divvy bike ride', evening: 'Take the "L" or a short Uber' },
     miami: { subway: 'Take the Metrorail or a free trolley', walk_uber: 'A quick rideshare or walk', evening: 'Rideshare or the free Miami Trolley' },
+    'los angeles': { subway: 'Drive 15 mins on the 101 freeway', walk_uber: '10 min Uber/Lyft or walk', evening: 'Drive or take a rideshare — LA nightlife needs wheels' },
+    la: { subway: 'Drive 15 mins on the 101 freeway', walk_uber: '10 min Uber/Lyft or walk', evening: 'Drive or take a rideshare — LA nightlife needs wheels' },
+    'las vegas': { subway: 'Take the monorail along the Strip', walk_uber: 'Quick walk or a short rideshare', evening: 'Take the monorail or walk the Strip' },
+    vegas: { subway: 'Take the monorail along the Strip', walk_uber: 'Quick walk or a short rideshare', evening: 'Take the monorail or walk the Strip' },
+    orlando: { subway: 'Ride the I-Ride Trolley', walk_uber: 'A quick rideshare or walk', evening: 'Take a rideshare to your next spot' },
+    'san francisco': { subway: 'Hop on the BART', walk_uber: '10 min walk or grab a cable car', evening: 'BART or a short rideshare' },
+    sf: { subway: 'Hop on the BART to your next stop', walk_uber: '10 min walk or grab a cable car to Powell', evening: 'BART or a quick Uber' },
+    seattle: { subway: 'Take the Link Light Rail', walk_uber: '15 min walk or a quick ferry across the Sound?', evening: 'Link Light Rail or a rideshare' },
+    nashville: { subway: 'Walk Broadway — everything is close together', walk_uber: '10 min walk or a quick rideshare', evening: 'Take a rideshare to East Nashville' },
+    austin: { subway: 'Rent a bike on South Congress', walk_uber: '10 min walk or a quick rideshare', evening: 'Take a rideshare or the 801 bus' },
   }
   const city = transports[cityKey] || transports['new york']
   return city[context] || 'Take the subway'
@@ -320,6 +544,68 @@ export async function mockGenerate(prompt, opts = {}) {
       'Learn to say "cafecito" (Cuban espresso). It\'s the social lubricant of Miami.',
       'Wynwood Walls are free. Go on the second Saturday for gallery walk events.',
       'Never pay for bottled water — the tap water in Miami is actually excellent.',
+    ]},
+    // ── 7 New US Cities ──
+    'los angeles': { data: LA_VENUES, districts: ['westside', 'eastside'], tips: [
+      'LA is a driving city. The 405 and 101 are brutal during rush hour (7-9 AM, 4-7 PM). Plan around it.',
+      'In-N-Out is fine, but locals go to Tommy\'s for chili burgers or Howlin\' Ray\'s for Nashville hot chicken.',
+      'The Getty Center is free — just pay for parking. Go on a clear day for insane ocean-to-mountain views.',
+      'Venice Beach gets crowded on weekends. Go on a weekday morning for the best experience.',
+      'The Metro B Line (Red) connects Downtown to Hollywood and Universal City. Underrated for avoiding traffic.',
+    ]},
+    'la': { data: LA_VENUES, districts: ['westside', 'eastside'], tips: [
+      'LA is a driving city. The 405 and 101 are brutal during rush hour.',
+      'In-N-Out is fine, but locals go to Tommy\'s for chili burgers.',
+    ]},
+    'las vegas': { data: VEGAS_VENUES, districts: ['the_strip', 'downtown'], tips: [
+      'The Strip is longer than it looks — 4.2 miles end to end. Wear comfortable shoes.',
+      'Skip the buffet lines. The best food in Vegas is at off-Strip locals\' spots.',
+      'Downtown (Fremont Street) is cheaper, weirder, and more authentic than the Strip.',
+      'The monorail runs behind the east side of the Strip. Cheaper than rideshares.',
+      'Free parking is disappearing on the Strip. The Rio and downtown casinos still offer it.',
+    ]},
+    'vegas': { data: VEGAS_VENUES, districts: ['the_strip', 'downtown'], tips: [
+      'The Strip is longer than it looks — 4.2 miles end to end.',
+      'Downtown (Fremont Street) is cheaper, weirder, and more authentic.',
+    ]},
+    'orlando': { data: ORLANDO_VENUES, districts: ['theme_park_area', 'winter_park'], tips: [
+      'Orlando is more than theme parks. Winter Park and Mills 50 have incredible local food scenes.',
+      'I-Ride Trolley runs along International Drive. Cheap and easy.',
+      'Lake Eola in downtown Orlando is gorgeous at sunset. Rent a swan boat.',
+      'The best Cuban sandwich in Orlando is at Black Bean Deli — not in Miami.',
+      'Summer afternoon thunderstorms are daily and predictable (2-4 PM). Plan indoor activities then.',
+    ]},
+    'san francisco': { data: SF_VENUES, districts: ['downtown', 'the_mission'], tips: [
+      'SF is small but hilly. Wear comfortable shoes and bring layers — the fog can roll in any time.',
+      'BART is the fastest way from the airport and between neighborhoods. Muni covers the rest.',
+      'The Mission has the best burritos in the country. La Taqueria and El Farolito are the gold standard.',
+      'Alcatraz tickets sell out weeks in advance. Book ahead or take a sunset firework cruise instead.',
+      'The Golden Gate Bridge is free to walk/bike across. Rent a bike at Fisherman\'s Wharf and ride to Sausalito.',
+    ]},
+    'sf': { data: SF_VENUES, districts: ['downtown', 'the_mission'], tips: [
+      'SF is small but hilly. The fog can roll in any time — bring layers.',
+      'The Mission has the best burritos in the country.',
+    ]},
+    'seattle': { data: SEATTLE_VENUES, districts: ['capitol_hill', 'downtown'], tips: [
+      'The Link Light Rail connects the airport to downtown in 35 minutes. Cheaper than a rideshare.',
+      'Pike Place Market is best visited on weekday mornings before the cruise ship crowds arrive.',
+      'Capitol Hill is where the locals actually hang out — coffee shops, bars, and indie bookstores.',
+      'The Washington State Ferries are a bargain. $8 round trip to Bainbridge Island for a stunning skyline view.',
+      'Seattle summers are perfect (70s and sunny). The rest of the year, a good rain jacket is essential.',
+    ]},
+    'nashville': { data: NASHVILLE_VENUES, districts: ['broadway', 'east_nashville'], tips: [
+      'Broadway is fun for one night. East Nashville is where locals live, eat, and drink.',
+      'Hot chicken heat levels are no joke. Start at "Medium" unless you have something to prove.',
+      'The Ryman self-guided tour is worth every penny. Go see a show there if you can.',
+      'Nashville is more walkable than people think — especially downtown and East Nashville.',
+      'The Bluebird Cafe is tiny. Reservations open a month in advance and sell out in minutes.',
+    ]},
+    'austin': { data: AUSTIN_VENUES, districts: ['downtown', 'south_congress'], tips: [
+      'Franklin BBQ is legendary but the line starts at 9 AM. Try Micklethwait Craft Meats or La Barbecue as alternatives.',
+      'Barton Springs is $5 and worth every penny. Go on a weekday morning to avoid crowds.',
+      'South Congress is Austin\'s soul. Walk it from the river to the "I Love You So Much" mural.',
+      'Austin is intensely hot in summer (100°F+). Plan outdoor activities for early morning or evening.',
+      'The 801 bus is the cheapest way to get around. CapMetro bikes are great for short trips downtown.',
     ]},
   }
 

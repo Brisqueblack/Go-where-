@@ -14,6 +14,17 @@ const CITY_MAP = {
   'washington-dc': 'Washington D.C.',
   'chicago': 'Chicago',
   'miami': 'Miami',
+  // ── 7 New US Cities ──
+  'los-angeles': 'Los Angeles',
+  'la': 'Los Angeles',
+  'las-vegas': 'Las Vegas',
+  'vegas': 'Las Vegas',
+  'orlando': 'Orlando',
+  'san-francisco': 'San Francisco',
+  'sf': 'San Francisco',
+  'seattle': 'Seattle',
+  'nashville': 'Nashville',
+  'austin': 'Austin',
 }
 
 // Files to import (all -hidden-gems.json in shared directory)
@@ -25,6 +36,14 @@ const GLOBS = [
   '/home/team/shared/dc-hidden-gems.json',
   '/home/team/shared/chicago-hidden-gems.json',
   '/home/team/shared/miami-hidden-gems.json',
+  // ── 7 New US Cities — files created by designer ──
+  '/home/team/shared/los-angeles-hidden-gems.json',
+  '/home/team/shared/las-vegas-hidden-gems.json',
+  '/home/team/shared/orlando-hidden-gems.json',
+  '/home/team/shared/san-francisco-hidden-gems.json',
+  '/home/team/shared/seattle-hidden-gems.json',
+  '/home/team/shared/nashville-hidden-gems.json',
+  '/home/team/shared/austin-hidden-gems.json',
 ]
 
 let totalImported = 0

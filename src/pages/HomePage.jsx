@@ -2,11 +2,20 @@ import { useState, useEffect } from 'react'
 import { Button, ChipGroup } from '../components/ui'
 
 const EXPANSION_CITIES = [
+  // Original 5
   { name: 'Boston', icon: '🗺️', gem: "Bova's Bakery at midnight", slug: 'boston', color: 'from-teal/20 to-coral/10' },
   { name: 'Philadelphia', icon: '🔔', gem: 'Secret gas-lit alley in Society Hill', slug: 'philadelphia', color: 'from-coral/20 to-navy/10' },
   { name: 'Washington D.C.', icon: '🏛️', gem: 'Tidal Basin at dawn, no crowds', slug: 'dc', color: 'from-violet/20 to-teal/10' },
   { name: 'Chicago', icon: '🌊', gem: 'Hidden lily pond in Lincoln Park', slug: 'chicago', color: 'from-teal/20 to-violet/10' },
   { name: 'Miami', icon: '🌴', gem: 'Hand-rolled cigars in Little Havana', slug: 'miami', color: 'from-coral/20 to-teal/10' },
+  // 7 New Cities
+  { name: 'Los Angeles', icon: '🎬', gem: 'Sunset at the Griffith, no filter needed', slug: 'los-angeles', color: 'from-amber/20 to-coral/10' },
+  { name: 'Las Vegas', icon: '🎰', gem: 'Neon Museum after dark, pure magic', slug: 'las-vegas', color: 'from-violet/20 to-amber/10' },
+  { name: 'Orlando', icon: '🚀', gem: 'Winter Park — parks, not theme parks', slug: 'orlando', color: 'from-teal/20 to-emerald/10' },
+  { name: 'San Francisco', icon: '🌉', gem: 'Mission District murals & burritos', slug: 'san-francisco', color: 'from-coral/20 to-amber/10' },
+  { name: 'Seattle', icon: '☕', gem: 'Ferry to Bainbridge for skyline views', slug: 'seattle', color: 'from-violet/20 to-teal/10' },
+  { name: 'Nashville', icon: '🎸', gem: 'The Bluebird Cafe at sunset', slug: 'nashville', color: 'from-amber/20 to-violet/10' },
+  { name: 'Austin', icon: '🎵', gem: 'Barton Springs on a 100°F day', slug: 'austin', color: 'from-teal/20 to-amber/10' },
 ]
 
 const VIBE_OPTIONS = [
@@ -156,8 +165,8 @@ export default function HomePage({ onNavigate, preferences, setPreferences }) {
           </p>
         )}
 
-        {/* 5-City Expansion Section */}
-        <div className="w-full max-w-lg mt-14 mb-4">
+        {/* 12-City Expansion Section */}
+        <div className="w-full max-w-2xl mt-14 mb-4">
           {/* Section header */}
           <div className="text-center mb-6">
             <div className="inline-flex items-center gap-2 bg-white/5 rounded-full px-4 py-1.5 border border-white/10">
@@ -167,15 +176,15 @@ export default function HomePage({ onNavigate, preferences, setPreferences }) {
               </span>
             </div>
             <h2 className="text-white font-heading font-bold text-xl mt-3 leading-tight">
-              5 New Cities. <span className="text-teal">Endless Hidden Gems.</span>
+              12 Cities. <span className="text-teal">Endless Hidden Gems.</span>
             </h2>
             <p className="text-text-muted text-sm mt-1 max-w-sm mx-auto">
-              Your local friend has arrived in these five cities — and knows the spots nobody else does.
+              Your local friend has arrived in twelve cities — and knows the spots nobody else does.
             </p>
           </div>
 
           {/* City cards — responsive grid */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {EXPANSION_CITIES.map((city) => (
               <div
                 key={city.slug}
