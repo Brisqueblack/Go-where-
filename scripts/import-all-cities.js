@@ -99,7 +99,7 @@ for (const filePath of GLOBS) {
   try {
     const data = JSON.parse(readFileSync(filePath, 'utf-8'))
     const venues = data.venues || []
-    const fileName = basename(filePath).replace('-hidden-gems.json', '')
+    const fileName = basename(filePath).replace('-hidden-gems.json', '').replace('.json', '')
     const cityName = CITY_MAP[fileName] || fileName
     const meta = data.meta || {}
 
