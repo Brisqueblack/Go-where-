@@ -102,7 +102,7 @@ SCHEMA (parseable by JSON.parse):
         {
           \"name\": \"venue or activity name\",
           \"description\": \"1-2 sentences, friendly and specific. Why this spot is great.\",
-          \"category\": \"restaurant|museum|park|shopping|entertainment|outdoor|landmark|cafe|bar\",
+          \"category\": \"restaurant|museum|park|shopping|entertainment|outdoor|landmark|cafe|bar|food|nightlife|culture|date_ideas|family|seasonal|free\",
           \"timing\": \"HH:MM AM - HH:MM PM — e.g. '9:00 AM - 11:00 AM'\",
           \"transport\": \"specific transit directions — e.g. '15 min Uber' or 'Take the L train to Bedford Ave' or '5 min walk'\",
           \"latitude\": number | null,
@@ -124,7 +124,8 @@ RULES:
 6. The total_estimated_time_hours should add up all the timing blocks.
 7. Category must be exactly one of the listed values.
 8. Use real venue names with approximate real coordinates for {destination}.
-9. The voice should feel like a local friend's recommendation, not a sterile algorithm.`
+9. The voice should feel like a local friend's recommendation, not a sterile algorithm.
+10. Match the user's vibe to categories: 'foodie' -> food/restaurant, 'outdoor' -> outdoor/park, 'culture' -> culture/museum, 'nightlife' -> nightlife/bar/entertainment, 'shopping' -> shopping, 'date-night' -> date_ideas/restaurant, 'family' -> family/outdoor, 'wellness' -> free/outdoor.`
 
   const user = `Plan a ${duration}-day trip to ${destination}.
 Budget: ${budgetLevel}
