@@ -15,6 +15,14 @@ const WHO_OPTIONS = [
   { value: 'friends', label: '👥 Friends' },
 ]
 
+const WEATHER_OPTIONS = [
+  { value: 'any', label: '🌈 Any Weather' },
+  { value: 'sunny', label: '☀️ Sunny' },
+  { value: 'cloudy', label: '⛅ Cloudy' },
+  { value: 'rainy', label: '🌧️ Rainy' },
+  { value: 'snowy', label: '❄️ Snowy' },
+]
+
 const VIBE_OPTIONS = [
   { value: 'relaxed', label: 'Relaxed' },
   { value: 'adventurous', label: 'Adventurous' },
@@ -43,6 +51,7 @@ export default function ItineraryInputPage({ preferences, setPreferences, onBack
   const [where, setWhere] = useState(preferences.where || '')
   const [when, setWhen] = useState(preferences.when || '')
   const [who, setWho] = useState(preferences.who || '')
+  const [weather, setWeather] = useState(preferences.weather || '')
   const [vibes, setVibes] = useState(preferences.vibes || [])
   const [budget, setBudget] = useState(preferences.budget || '')
   const [time, setTime] = useState(preferences.time || '')
@@ -67,6 +76,7 @@ export default function ItineraryInputPage({ preferences, setPreferences, onBack
       where,
       when,
       who,
+      weather,
       vibes,
       budget,
       time,
@@ -76,6 +86,7 @@ export default function ItineraryInputPage({ preferences, setPreferences, onBack
       where,
       when,
       who,
+      weather,
       vibes,
       budget,
       time,
@@ -167,6 +178,30 @@ export default function ItineraryInputPage({ preferences, setPreferences, onBack
             })}
           </div>
           {errors.who && <p className="text-error text-xs font-body">{errors.who}</p>}
+        </div>
+
+        {/* Weather */}
+        <div className="space-y-2">
+          <label className="text-xs font-semibold font-body text-text-primary uppercase tracking-wider">Weather</label>
+          <div className="flex gap-2 flex-wrap">
+            {WEATHER_OPTIONS.map((opt) => {
+              const isSelected = weather === opt.value
+              return (
+                <button
+                  key={opt.value}
+                  onClick={() => setWeather(opt.value)}
+                  className={`px-4 py-2 rounded-[8px] text-sm font-medium font-body transition-all duration-150 cursor-pointer ${
+                    isSelected
+                      ? 'bg-teal text-white shadow-sm'
+                      : 'bg-white border-2 border-gray-200 text-text-secondary hover:border-teal'
+                  }`}
+                  aria-pressed={isSelected}
+                >
+                  {opt.label}
+                </button>
+              )
+            })}
+          </div>
         </div>
 
         {/* Vibe */}

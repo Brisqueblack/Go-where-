@@ -45,7 +45,7 @@ app.get('/api/health', (_req, res) => {
 // ── Generate itinerary ─────────────────────────────────────────────────────
 app.post('/api/itineraries/generate', async (req, res) => {
   try {
-    const { destination, duration_days, budget_level, vibes, preferences, user_email, is_premium } = req.body
+    const { destination, duration_days, budget_level, vibes, preferences, user_email, is_premium, weather, group_type, time_available } = req.body
 
     // Validate required field
     if (!destination) {
@@ -62,6 +62,9 @@ app.post('/api/itineraries/generate', async (req, res) => {
       budget_level: budget_level || 'moderate',
       vibes: vibes || 'balanced',
       preferences: preferences || '',
+      weather: weather || 'any',
+      group_type: group_type || 'solo',
+      time_available: time_available || '',
       user_email,
       isPremium: is_premium === true || is_premium === 'true',
     }, { skipDb: false })

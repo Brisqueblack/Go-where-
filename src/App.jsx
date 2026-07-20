@@ -73,6 +73,9 @@ export default function App() {
     const budget_level = BUDGET_MAP[data.budget] || 'moderate'
     const vibes = (data.vibes || []).join(', ')
     const preferences_text = data.interests || ''
+    const weather = data.weather || 'any'
+    const group_type = data.who || 'solo'
+    const time_available = data.time || ''
 
     // Call the real AI engine
     const result = await apiGenerate({
@@ -81,6 +84,9 @@ export default function App() {
       budget_level,
       vibes,
       preferences: preferences_text,
+      weather,
+      group_type,
+      time_available,
       is_premium: isPremium,
     })
 

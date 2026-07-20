@@ -25,6 +25,9 @@ export function buildItineraryPrompt(inputs = {}) {
   const vibes = inputs.vibes || 'balanced'
   const preferences = inputs.preferences || ''
   const venues = inputs.venues || []
+  const weather = inputs.weather || 'any'
+  const groupType = inputs.group_type || 'solo'
+  const timeAvailable = inputs.time_available || null
 
   // City-specific local friend persona
   const cityPersonas = {
@@ -161,11 +164,26 @@ RULES:
 7. Category must be exactly one of the listed values.
 8. Use real venue names with approximate real coordinates for {destination}.
 9. The voice should feel like a local friend's recommendation, not a sterile algorithm.
-10. Match the user's vibe to categories: 'foodie' -> food/restaurant, 'outdoor' -> outdoor/park, 'culture' -> culture/museum, 'nightlife' -> nightlife/bar/entertainment, 'shopping' -> shopping, 'date-night' -> date_ideas/restaurant, 'family' -> family/outdoor, 'wellness' -> free/outdoor.`
+10. Match the user's vibe to categories: 'foodie' -> food/restaurant, 'outdoor' -> outdoor/park, 'culture' -> culture/museum, 'nightlife' -> nightlife/bar/entertainment, 'shopping' -> shopping, 'date-night' -> date_ideas/restaurant, 'family' -> family/outdoor, 'wellness' -> free/outdoor.
+11. CURATE TIGHTLY — Return exactly 8-12 items total across all days. Be ruthless. Only include the very best options that fit ALL constraints (weather-appropriateness, budget, time, group composition). If it's raining, don't suggest outdoor activities. If traveling with kids, prioritize family-friendly spots. Think like a local friend: "Given these constraints, here are the 8-12 things you should absolutely do."
+12. WEATHER-AWARE — If the weather is rainy, snowy, or cloudy, prioritize indoor activities (museums, restaurants, cafes, shopping, indoor entertainment). If sunny, outdoor activities are great. Adjust timing suggestions accordingly — e.g., "visit the park while it's sunny" or "hit the museum to escape the rain."
+13. GROUP-AWARE — Tailor recommendations to the group type: solo travelers get efficient, solo-friendly spots; couples get romantic/dates; families get kid-friendly, low-stress options; friend groups get social, fun, group-friendly venues.`
+
+  // Map form time values to human-readable duration
+  const timeLabels = {
+    'few-hours': 'a few hours',
+    'half-day': 'a half day',
+    'full-day': 'a full day',
+    'multi-day': 'multiple days',
+  }
+  const timeLabel = timeLabels[timeAvailable] || (timeAvailable ? `${timeAvailable}` : 'a full day')
 
   const user = `Plan a ${duration}-day trip to ${destination}.
 Budget: ${budgetLevel}
 Vibes: ${vibes}
+Time available: ${timeLabel}
+Weather: ${weather === 'any' ? 'any weather' : weather}
+Traveling with: ${groupType === 'solo' ? 'just yourself' : groupType === 'couple' ? 'your partner' : groupType === 'family' ? 'your family' : 'friends'}
 ${preferences ? `Extra notes: ${preferences}` : ''}`
 
   return { system, user, full: `${system}\n\n${user}` }
