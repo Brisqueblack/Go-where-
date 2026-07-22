@@ -193,19 +193,53 @@ for (const filePath of GLOBS) {
     let errors = 0
 
     for (const v of venues) {
-      try {
-        const name = (v.name || '').replace(/'/g, "''")
-        const cat = (v.category || '').replace(/'/g, "''")
-        const desc = (v.description || '').replace(/'/g, "''")
-        const borough = (v.neighborhood || v.borough || '').replace(/'/g, "''")
-        const tags = JSON.stringify(v.tags || []).replace(/'/g, "''")
-        const tip = (v.local_tip || '').replace(/'/g, "''")
-        const lat = v.latitude ?? 'NULL'
-        const lng = v.longitude ?? 'NULL'
-        const cost = v.estimated_cost ?? 'NULL'
-        const bestTime = (v.best_time || '').replace(/'/g, "''")
+              try {
+                const name = (v.name || '').replace(/'/g, "''")
+                const cat = (v.category || '').replace(/'/g, "''")
+                const desc = (v.description || '').replace(/'/g, "''")
+                const borough = (v.neighborhood || v.borough || '').replace(/'/g, "''")
+                const tags = JSON.stringify(v.tags || []).replace(/'/g, "''")
+                const tip = (v.local_tip || '').replace(/'/g, "''")
+                const lat = v.latitude ?? 'NULL'
+                const lng = v.longitude ?? 'NULL'
+                const cost = v.estimated_cost ?? 'NULL'
+                const bestTime = (v.best_time || '').replace(/'/g, "''")
 
-        const sql = `INSERT INTO venues (name, category, description, latitude, longitude, estimated_cost, city, borough, tags, best_time, local_tip) VALUES ('${name}', '${cat}', '${desc}', ${lat}, ${lng}, ${cost}, '${cityName.replace(/'/g, "''")}', '${borough}', '${tags}', '${bestTime}', '${tip}')`
+                // Quality Foundation fields
+                const authenticity = v.authenticity ?? 'NULL'
+                const crowdLevel = v.crowd_level ?? 'NULL'
+                const valueForMoney = v.value_for_money ?? 'NULL'
+                const localPopularity = v.local_popularity ?? 'NULL'
+                const touristVisibility = v.tourist_visibility ?? 'NULL'
+                const photoAppeal = v.photo_appeal ?? 'NULL'
+
+                // Compute hidden_gem_score if component scores are present
+                let hiddenGemScore = 'NULL'
+                if (v.hidden_gem_score != null) {
+                  hiddenGemScore = v.hidden_gem_score
+                } else if (authenticity !== 'NULL' && crowdLevel !== 'NULL' && valueForMoney !== 'NULL' && localPopularity !== 'NULL' && touristVisibility !== 'NULL' && photoAppeal !== 'NULL') {
+                  // Weighted score formula: authenticity(20%) + value(20%) + local_pop(20%) - crowd(10%) - tourist_vis(15%) + photo(15%)
+                  // Invert crowd_level and tourist_visibility since lower is better for hidden gems
+                  const invCrowd = 6 - v.crowd_level  // 1-5 scale, 5=empty becomes best
+                  const invTourist = 11 - v.tourist_visibility  // 1-10, higher locals-only
+                  hiddenGemScore = Math.round(
+                    (v.authenticity * 2.0) +
+                    (invCrowd * 2.0) +
+                    (v.value_for_money * 2.0) +
+                    (v.local_popularity * 2.0) +
+                    (invTourist * 1.5) +
+                    (v.photo_appeal * 1.5)
+                  )
+                  hiddenGemScore = Math.min(Math.max(hiddenGemScore, 0), 100)
+                }
+
+                const warnings = v.warnings ? JSON.stringify(v.warnings).replace(/'/g, "''") : 'NULL'
+                const alternativesTo = (v.alternatives_to || '').replace(/'/g, "''") || 'NULL'
+                const whyLocalsLoveIt = (v.why_locals_love_it || '').replace(/'/g, "''") || 'NULL'
+                const whatTouristsMiss = (v.what_tourists_miss || '').replace(/'/g, "''") || 'NULL'
+                const insiderTip = (v.insider_tip || '').replace(/'/g, "''") || 'NULL'
+
+                const sql = `INSERT INTO venues (name, category, description, latitude, longitude, estimated_cost, city, borough, tags, best_time, local_tip, hidden_gem_score, authenticity, crowd_level, value_for_money, local_popularity, tourist_visibility, photo_appeal, warnings, alternatives_to, why_locals_love_it, what_tourists_miss, insider_tip) VALUES ('${name}', '${cat}', '${desc}', ${lat}, ${lng}, ${cost}, '${cityName.replace(/'/g, "''")}', '${borough}', '${tags}', '${bestTime}', '${tip}', ${hiddenGemScore}, ${authenticity}, ${crowdLevel}, ${valueForMoney}, ${localPopularity}, ${touristVisibility}, ${photoAppeal}, ${warnings}, ${alternativesTo === 'NULL' ? 'NULL' : `'${alternativesTo}'`}, ${whyLocalsLoveIt === 'NULL' ? 'NULL' : `'${whyLocalsLoveIt}'`}, ${whatTouristsMiss === 'NULL' ? 'NULL' : `'${whatTouristsMiss}'`}, ${insiderTip === 'NULL' ? 'NULL' : `'${insiderTip}'`})`
 
         execSync(`team-db "${sql.replace(/"/g, '\\"')}"`, { encoding: 'utf-8', timeout: 10000 })
         imported++
@@ -218,6 +252,25 @@ for (const filePath of GLOBS) {
     console.log(`   ✅ Imported: ${imported} | Errors: ${errors}`)
     totalImported += imported
     totalErrors += errors
+
+    // Import neighborhood vibes from meta
+    if (meta.neighborhood_vibes && Array.isArray(meta.neighborhood_vibes)) {
+      let vibesImported = 0
+      for (const nv of meta.neighborhood_vibes) {
+        try {
+          const nName = (nv.name || nv.neighborhood || '').replace(/'/g, "''")
+          const nVibe = (nv.vibe || nv.vibe_description || '').replace(/'/g, "''")
+          if (nName) {
+            execSync(`team-db "DELETE FROM neighborhood_vibes WHERE city = '${cityName.replace(/'/g, "''")}' AND neighborhood = '${nName}'"`, { encoding: 'utf-8', timeout: 10000 })
+            execSync(`team-db "INSERT INTO neighborhood_vibes (city, neighborhood, vibe_description) VALUES ('${cityName.replace(/'/g, "''")}', '${nName}', '${nVibe}')"`, { encoding: 'utf-8', timeout: 10000 })
+            vibesImported++
+          }
+        } catch (err) {
+          console.error(`   ⚠️  Failed to import vibe for "${nv.name || nv.neighborhood}":`, err.message)
+        }
+      }
+      if (vibesImported > 0) console.log(`   🏘️  Imported ${vibesImported} neighborhood vibes`)
+    }
 
   } catch (err) {
     console.error(`\n❌ Failed to process ${filePath}:`, err.message)

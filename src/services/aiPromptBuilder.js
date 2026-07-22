@@ -115,8 +115,23 @@ export function buildItineraryPrompt(inputs = {}) {
   let venueContext = ''
   if (venues.length > 0) {
     venueContext = `\nEXCLUSIVE HIDDEN GEMS TO PRIORITIZE (VibeVoyage Premium):\n` + 
-      venues.map(v => `- ${v.name} (${v.category}): ${v.description} Tip: ${v.local_tip}`).join('\n') +
-      `\n\nNote: These are exclusive spots for our Premium members. Please weave these into the itinerary naturally where they fit the user's vibes.`
+      venues.map(v => {
+        const parts = [`- ${v.name} (${v.category}): ${v.description}`]
+        if (v.hidden_gem_score != null) parts.push(`  ✨ Hidden Gem Score: ${v.hidden_gem_score}/100`)
+        if (v.why_locals_love_it) parts.push(`  💚 Why locals love it: ${v.why_locals_love_it}`)
+        if (v.what_tourists_miss) parts.push(`  👀 What tourists miss: ${v.what_tourists_miss}`)
+        if (v.insider_tip) parts.push(`  🤫 Insider tip: ${v.insider_tip}`)
+        if (v.local_tip) parts.push(`  💡 Local tip: ${v.local_tip}`)
+        if (v.warnings) {
+          const warns = typeof v.warnings === 'string' ? JSON.parse(v.warnings) : v.warnings
+          if (Array.isArray(warns) && warns.length > 0) {
+            parts.push(`  ⚠️  Warnings: ${warns.join(' | ')}`)
+          }
+        }
+        if (v.alternatives_to) parts.push(`  🔀 Better alternative to: ${v.alternatives_to}`)
+        return parts.join('\n')
+      }).join('\n') +
+      `\n\nNote: These are exclusive spots for our Premium members. For each one, explain WHY this is a hidden gem — weave in the "why locals love it" and "what tourists miss" naturally in the itinerary text. If warnings are present, include them in the description. The Hidden Gem Score helps you prioritize — higher scores are more authentic local spots.`}
   }
 
   const system = `${persona}
